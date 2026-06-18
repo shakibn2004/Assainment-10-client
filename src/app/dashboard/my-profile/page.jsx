@@ -1,0 +1,194 @@
+import React from 'react';
+import {
+    Pencil,
+    CheckCircle2,
+    MapPin,
+    User,
+    Lock,
+    Droplet
+} from 'lucide-react';
+
+const ProfileSettings = () => {
+    return (
+        <div className="flex-1 overflow-auto w-full max-w-5xl mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
+
+            {/* Header Section */}
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h1 className="text-[2rem] font-black tracking-tight leading-tight flex items-center">
+                        <span className="text-slate-900">Profile</span>
+                        <span className="text-[#ed2547]">Settings</span>
+                    </h1>
+                    <p className="text-slate-500 text-[0.95rem] font-medium mt-1">
+                        Manage your personal information and donor credentials.
+                    </p>
+                </div>
+
+                <button className="flex items-center gap-2.5 px-6 py-2.5 bg-white border-2 border-red-50 text-[#ed2547] rounded-full font-bold text-[0.95rem] shadow-sm hover:bg-red-50 transition-colors">
+                    <Pencil className="w-4 h-4" strokeWidth={2.5} />
+                    Edit Profile
+                </button>
+            </div>
+
+            {/* Main Profile Card */}
+            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.03)] overflow-hidden">
+
+                {/* Cover Photo Area with Dotted Pattern */}
+                <div
+                    className="h-44 w-full bg-[#3d0814]"
+                    style={{
+                        backgroundImage: 'radial-gradient(#5a1622 1.5px, transparent 1.5px)',
+                        backgroundSize: '16px 16px'
+                    }}
+                ></div>
+
+                {/* Profile Info Overlay */}
+                <div className="px-10 relative flex justify-between">
+
+                    {/* Avatar and Name */}
+                    <div className="flex gap-6 -mt-16 relative z-10">
+                        <img
+                            src="https://i.pravatar.cc/300?img=11" // Replace with actual user image
+                            alt="Md Nazmus Shakib"
+                            className="w-[140px] h-[140px] rounded-full border-[6px] border-white object-cover bg-gray-200 shadow-sm"
+                        />
+                        <div className="pt-20">
+                            <div className="flex items-center gap-4">
+                                <h2 className="text-[2rem] font-black text-slate-900 leading-none">
+                                    Md Nazmus Shakib
+                                </h2>
+                                <span className="flex items-center gap-1.5 px-3 py-1 bg-[#e8f5ed] text-[#129148] text-[0.65rem] font-extrabold uppercase tracking-wide rounded-full border border-green-100">
+                                    <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={3} />
+                                    Active Donor
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-1.5 mt-2.5 text-slate-500 font-semibold text-[0.95rem]">
+                                <MapPin className="w-[18px] h-[18px] text-[#ed2547]" strokeWidth={2.5} />
+                                Keshabpur, Jashore
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Blood Group Floating Badge */}
+                    <div className="absolute top-[-45px] right-10 bg-[#fdf2f3] border border-red-100 rounded-3xl p-4 flex flex-col items-center justify-center w-[130px] shadow-sm z-10">
+                        <span className="text-[0.6rem] font-black text-[#e85c6f] tracking-[0.15em] uppercase mb-0.5">
+                            Blood Group
+                        </span>
+                        <span className="text-[2.75rem] font-black text-[#ed2547] leading-none drop-shadow-sm">
+                            B+
+                        </span>
+                    </div>
+                </div>
+
+                {/* Form Details Grid */}
+                <div className="px-10 pt-12 pb-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+                    {/* Left Column (Forms) */}
+                    <div className="col-span-2 space-y-10">
+
+                        {/* Personal Information Section */}
+                        <section>
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="flex items-center justify-center w-11 h-11 bg-[#fdf2f3] text-[#ed2547] rounded-xl">
+                                    <User className="w-5 h-5" strokeWidth={2.5} />
+                                </div>
+                                <h3 className="text-xl font-black text-slate-900">Personal Information</h3>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-5">
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+                                        Full Name
+                                    </label>
+                                    <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-800">
+                                        Md Nazmus Shakib
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+                                        Email (Fixed)
+                                    </label>
+                                    <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-500 flex justify-between items-center">
+                                        shakibn2004@gmail.com
+                                        <Lock className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Address Details Section */}
+                        <section>
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="flex items-center justify-center w-11 h-11 bg-[#fdf2f3] text-[#ed2547] rounded-xl">
+                                    <MapPin className="w-5 h-5" strokeWidth={2.5} />
+                                </div>
+                                <h3 className="text-xl font-black text-slate-900">Address Details</h3>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-5">
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+                                        District
+                                    </label>
+                                    <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-800">
+                                        Jashore
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+                                        Upazila
+                                    </label>
+                                    <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-800">
+                                        Keshabpur
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    {/* Right Column (Medical Profile) */}
+                    <div className="col-span-1">
+                        <div className="bg-[#fffafa] rounded-[2rem] p-7 h-full flex flex-col gap-6">
+
+                            <div className="flex items-center gap-4 mb-2">
+                                <div className="flex items-center justify-center w-11 h-11 bg-white border border-red-50 text-[#ed2547] rounded-xl shadow-sm">
+                                    <Droplet className="w-5 h-5" strokeWidth={2.5} />
+                                </div>
+                                <h3 className="text-xl font-black text-slate-900 leading-tight">
+                                    Medical<br />Profile
+                                </h3>
+                            </div>
+
+                            {/* Blood Group Info Box */}
+                            <div className="flex flex-col gap-2">
+                                <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
+                                    Blood Group
+                                </label>
+                                <div className="bg-white px-5 py-4 rounded-2xl shadow-sm border border-red-50 text-xl font-black text-[#ed2547]">
+                                    B+
+                                </div>
+                            </div>
+
+                            {/* Eligibility Card */}
+                            <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 mt-2">
+                                <h4 className="font-black text-slate-900 text-[1.05rem] mb-2 leading-tight">
+                                    Eligible to<br />Donate
+                                </h4>
+                                <p className="text-[0.85rem] font-medium text-slate-500 leading-relaxed">
+                                    Your account is in good standing. You are ready to save lives.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProfileSettings;
