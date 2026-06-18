@@ -1,21 +1,35 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Droplet, ChevronDown } from 'lucide-react';
 
 const FindDonor = () => {
   const [bloodGroup, setBloodGroup] = useState('');
   const [district, setDistrict] = useState('');
   const [upazila, setUpazila] = useState('');
+  const [districts, setDistricts] = useState([]);
+  const [upazilas, setUpazilas] = useState([]);
 
   // Sample data for the dropdowns
+  useEffect(() => {
+    const handleFetch = async () => {
+      const districtsPromised = await fetch('http://localhost:8000/bddistricts');
+      const districts = await districtsPromised.json();
+      setDistricts(districts);
+      const districtPromised = await fetch(`http://localhost:8000/bddistricts/${district}`);
+      const districtData = await districtPromised.json();
+      const upazilasPromised = await fetch(`http://localhost:8000/bdupazilas/${districtData.id}`);
+      const upazilas = await upazilasPromised.json();
+      setUpazilas(upazilas);
+    }
+
+    handleFetch();
+  }, [district])
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
-  const districts = ['Khulna', 'Dhaka', 'Sylhet', 'Chittagong', 'Rajshahi'];
-  const upazilas = ['Daulatpur', 'Phultala', 'Dumuria', 'Batiaghata', 'Sonadanga'];
 
   return (
     <section className="py-20 bg-[#fafafa] min-h-screen px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        
+
         {/* Header Section */}
         <div className="text-center mb-12">
           <h2 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 mb-4">
@@ -29,14 +43,14 @@ const FindDonor = () => {
         {/* Search Panel Container */}
         <div className="bg-white rounded-[2rem] p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-12 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-            
+
             {/* Blood Group Select */}
             <div className="flex flex-col">
               <label className="text-[10px] font-extrabold text-slate-400 uppercase tracking-widest mb-2 ml-1">
                 Blood Group
               </label>
               <div className="relative">
-                <select 
+                <select
                   value={bloodGroup}
                   onChange={(e) => setBloodGroup(e.target.value)}
                   className="w-full bg-slate-50 text-slate-700 text-sm font-bold rounded-xl px-4 py-4 appearance-none outline-none focus:ring-2 focus:ring-rose-500/20 focus:bg-white transition-all cursor-pointer"
@@ -56,14 +70,14 @@ const FindDonor = () => {
                 District
               </label>
               <div className="relative">
-                <select 
+                <select
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
                   className="w-full bg-slate-50 text-slate-700 text-sm font-bold rounded-xl px-4 py-4 appearance-none outline-none focus:ring-2 focus:ring-rose-500/20 focus:bg-white transition-all cursor-pointer"
                 >
                   <option value="" disabled>Select District</option>
                   {districts.map(dist => (
-                    <option key={dist} value={dist}>{dist}</option>
+                    <option key={dist.id} value={dist.name}>{dist.name}</option>
                   ))}
                 </select>
                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -76,14 +90,14 @@ const FindDonor = () => {
                 Upazila
               </label>
               <div className="relative">
-                <select 
+                <select
                   value={upazila}
                   onChange={(e) => setUpazila(e.target.value)}
                   className="w-full bg-slate-50 text-slate-700 text-sm font-bold rounded-xl px-4 py-4 appearance-none outline-none focus:ring-2 focus:ring-rose-500/20 focus:bg-white transition-all cursor-pointer"
                 >
                   <option value="" disabled>Select Upazila</option>
                   {upazilas.map(upz => (
-                    <option key={upz} value={upz}>{upz}</option>
+                    <option key={upz.name} value={upz.name}>{upz.name}</option>
                   ))}
                 </select>
                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
@@ -101,7 +115,7 @@ const FindDonor = () => {
 
         {/* Empty State / Initial Prompt Section */}
         <div className="border-2 border-dashed border-slate-200 rounded-[3rem] bg-white/50 backdrop-blur-sm py-20 px-6 flex flex-col items-center text-center">
-          
+
           {/* Layered Decorative Icon */}
           <div className="relative mb-8">
             {/* Outer pink circle */}
@@ -118,11 +132,11 @@ const FindDonor = () => {
           <h3 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">
             Ready to find a hero?
           </h3>
-          
+
           <p className="text-slate-500 font-medium max-w-sm leading-relaxed">
             Select a blood group and location to see available donors.
           </p>
-          
+
         </div>
 
       </div>
