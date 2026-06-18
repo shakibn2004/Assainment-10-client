@@ -1,10 +1,37 @@
 'use client'
 import React, { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, ShieldCheck } from 'lucide-react';
-import Link from 'next/link';
+import NextLink from 'next/link';
+import { TextField, Label, InputGroup, Button, Link } from "@heroui/react";
+import { redirect, useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        const userData = Object.fromEntries(formData.entries());
+
+        const { email, password } = userData;
+
+        const { data, error } = await authClient.signIn.email({
+            email, // required
+            password, // required
+            rememberMe: true,
+            callbackURL: redirect || "/",
+        }, {
+            onSuccess: () => {
+                router.push('/')
+            },
+
+            onError: (ctx) => {
+                alert(ctx.error.message)
+            },
+        });
+    };
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center p-4 sm:p-8">
@@ -66,55 +93,67 @@ const Login = () => {
                         </p>
                     </div>
 
-                    <form className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6">
 
                         {/* Email Field */}
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-slate-800">Email Address</label>
-                            <div className="relative flex items-center">
-                                <Mail className="absolute left-4 w-5 h-5 text-red-400" />
-                                <input
-                                    type="email"
+                        <TextField name="email" type="email" isRequired className="w-full">
+                            <Label className="text-xs font-bold text-slate-800 mb-2 block">Email Address</Label>
+                            <InputGroup className="h-14 bg-[#f0f4f8] border-none rounded-xl focus-within:ring-2 focus-within:ring-red-400 transition-all">
+                                <InputGroup.Prefix>
+                                    <Mail className="w-5 h-5 text-red-400 mx-4 flex-shrink-0" />
+                                </InputGroup.Prefix>
+                                <InputGroup.Input
                                     defaultValue="shakibn2004@gmail.com"
-                                    className="w-full bg-[#f0f4f8] text-slate-800 text-sm font-medium rounded-xl py-3.5 pl-12 pr-4 outline-none focus:ring-2 focus:ring-red-400 transition-all"
                                     placeholder="Enter your email"
+                                    className="text-sm font-medium text-slate-800 bg-transparent w-full outline-none"
                                 />
-                            </div>
-                        </div>
+                            </InputGroup>
+                        </TextField>
 
                         {/* Password Field */}
-                        <div className="space-y-2">
-                            <div className="flex justify-between items-center">
-                                <label className="text-xs font-bold text-slate-800">Password</label>
-                                <a href="#" className="text-xs font-bold text-[#e11d48] hover:underline">
+                        <TextField name="password" isRequired className="w-full">
+                            <div className="flex justify-between items-center mb-2">
+                                <Label className="text-xs font-bold text-slate-800 block">Password</Label>
+                                <Link
+                                    as={NextLink}
+                                    href="#"
+                                    className="text-xs font-bold text-[#e11d48] hover:underline"
+                                >
                                     Forgot Password?
-                                </a>
+                                </Link>
                             </div>
-                            <div className="relative flex items-center">
-                                <Lock className="absolute left-4 w-5 h-5 text-red-400" />
-                                <input
+                            <InputGroup className="h-14 bg-[#f0f4f8] border-none rounded-xl focus-within:ring-2 focus-within:ring-red-400 transition-all">
+                                <InputGroup.Prefix>
+                                    <Lock className="w-5 h-5 text-red-400 mx-4 flex-shrink-0" />
+                                </InputGroup.Prefix>
+                                <InputGroup.Input
                                     type={showPassword ? "text" : "password"}
                                     defaultValue="123456789"
-                                    className="w-full bg-[#f0f4f8] text-slate-800 text-sm font-medium rounded-xl py-3.5 pl-12 pr-12 outline-none focus:ring-2 focus:ring-red-400 transition-all tracking-widest"
                                     placeholder="••••••••"
+                                    className="text-sm font-medium text-slate-800 tracking-widest bg-transparent w-full outline-none"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 text-slate-400 hover:text-slate-600 focus:outline-none"
-                                >
-                                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
-                            </div>
-                        </div>
+                                <InputGroup.Suffix>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="mx-4 text-slate-400 hover:text-slate-600 focus:outline-none transition-colors"
+                                    >
+                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                </InputGroup.Suffix>
+                            </InputGroup>
+                        </TextField>
 
                         {/* Login Button */}
-                        <button
-                            type="submit"
-                            className="w-full bg-[#ef233c] hover:bg-[#d90429] text-white font-bold py-4 rounded-xl transition-all duration-300 shadow-lg shadow-red-500/30 hover:-translate-y-0.5 mt-4"
-                        >
-                            Log In
-                        </button>
+                        <div className="pt-2">
+                            <Button
+                                type="submit"
+                                radius="md"
+                                className="w-full bg-[#ef233c] hover:bg-[#d90429] text-white font-bold py-7 text-md transition-all duration-300 shadow-lg shadow-red-500/30 hover:-translate-y-0.5"
+                            >
+                                Log In
+                            </Button>
+                        </div>
 
                     </form>
 
@@ -122,7 +161,13 @@ const Login = () => {
                     <div className="mt-8 text-center">
                         <p className="text-sm font-medium text-slate-500">
                             Don't have an account?{' '}
-                            <Link className="text-[#e11d48] font-bold hover:underline" href='/register'>Register to donate</Link>
+                            <Link
+                                as={NextLink}
+                                href='/register'
+                                className="text-[#e11d48] font-bold hover:underline"
+                            >
+                                Register to donate
+                            </Link>
                         </p>
                     </div>
 

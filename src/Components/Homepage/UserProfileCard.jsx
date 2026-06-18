@@ -1,10 +1,24 @@
 'use client'
+import { authClient } from '@/lib/auth-client';
 import { LayoutDashboard, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-const UserProfileCard = ({ user, setUser, prCard }) => {
+const UserProfileCard = ({ session, setUser, prCard }) => {
+    const router = useRouter()
+    // user signout
+    const handleSingOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/"); // redirect to login page
+                },
+            },
+        });
+    }
+
     return (
-        <div className={`${user && prCard ? "block" : "hidden"} w-72 bg-white rounded-3xl absolute top-20 right-25 shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-6 font-sans`}>
+        <div className={`${session && prCard ? "block" : "hidden"} w-72 bg-white rounded-3xl absolute top-20 right-25 shadow-[0_8px_30px_rgb(0,0,0,0.08)] p-6 font-sans`}>
             {/* User Info Section */}
             <div className="mb-5">
                 <h2 className="text-[1.15rem] font-bold text-gray-900 leading-tight">
@@ -27,7 +41,7 @@ const UserProfileCard = ({ user, setUser, prCard }) => {
                     </Link>
                 </button>
 
-                <button onClick={() => setUser(false)} className="flex items-center gap-4 w-full p-2 hover:bg-red-50 rounded-xl transition-colors group">
+                <button onClick={handleSingOut} className="flex items-center gap-4 w-full p-2 hover:bg-red-50 rounded-xl transition-colors group">
                     <LogOut className="w-5 h-5 text-red-600" strokeWidth={2} />
                     <span className="text-red-600 font-bold text-[0.95rem]">
                         Logout

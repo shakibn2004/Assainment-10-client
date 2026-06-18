@@ -1,19 +1,70 @@
 'use client'
-import React, { useState } from 'react';
-import { Camera, User, Mail, Phone, MapPin, Map, Lock, RotateCcw } from 'lucide-react';
-import { Input, Select, SelectItem, Button, Avatar, Badge, Link } from "@heroui/react";
+import React, { useState, useRef } from 'react';
+import { Camera, User, Mail, Phone, MapPin, Map, Lock, RotateCcw, ImageUp, CircleUserRound } from 'lucide-react';
+import {
+  TextField, Label, InputGroup,
+  Select, ListBox, Button, Avatar, Badge, Link, FieldError
+} from "@heroui/react";
+import { authClient } from '@/lib/auth-client';
+import { useRouter } from 'next/navigation';
 
 const Registration = () => {
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
-  
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const router = useRouter();
+
+  // New state & ref for profile photo
+  const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
+  const fileInputRef = useRef(null);
+
+
   const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+  const isPasswordInvalid = confirmPassword !== '' && password !== confirmPassword;
+
+  const { data: session, isPending, error } = authClient.useSession();
+  console.log(session);
+
+  // Handle image selection & preview
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setProfilePhotoPreview(imageUrl);
+    }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const userData = Object.fromEntries(formData.entries());
+
+    const { name, email, password } = userData;
+
+    const { data, error } = await authClient.signUp.email({
+      name,
+      email,
+      password,
+    }, {
+      onSuccess: () => {
+        router.push('/')
+      }, onError: (ctx) => {
+        alert(ctx.error.message)
+      }
+    });
+
+
+    // userData.profilePhoto will now contain the actual File object!
+    console.log("Form Submitted:", name);
+  }
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] py-12 px-4 sm:px-6 flex justify-center items-center">
-      
-      {/* Main Card */}
+
       <div className="w-full max-w-3xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-default-100 overflow-hidden">
-        
+
         <div className="p-8 md:p-12">
           {/* Header */}
           <div className="text-center mb-10">
@@ -25,119 +76,121 @@ const Registration = () => {
             </p>
           </div>
 
-          {/* Profile Photo Upload */}
-          <div className="flex flex-col items-center mb-12">
-            <Badge
-              isOneChar
-              content={
-                <Button isIconOnly radius="full" size="sm" variant="flat" className="bg-white shadow-md border border-default-100 hover:bg-default-50">
-                  <Camera className="w-4 h-4 text-default-600" />
-                </Button>
-              }
-              placement="bottom-right"
-              shape="circle"
-            >
-              <Avatar
-                className="w-28 h-28 text-large bg-[#fff4e6] border-4 border-white shadow-sm"
-                icon={<User className="w-12 h-12 text-[#ffb347]/60" />}
-              />
-            </Badge>
-            <p className="mt-4 font-bold text-default-800">Profile Photo</p>
-          </div>
+          <form onSubmit={handleSignup} className="space-y-6">
 
-          <form className="space-y-6">
-            
+            {/* Profile Photo Upload (Now inside the form!) */}
+            <div className="w-fit mx-auto relative">
+              <div className='w-20 h-20 shadow-[0_0_1px] rounded-full flex items-center justify-center overflow-hidden'>
+                {/* <User size={40} color='#0000008f'/> */}
+                {
+                  profilePhotoPreview ? (
+                    <img className='w-fit h-fit' src={profilePhotoPreview} alt="" />
+                  ) : (
+                    <User size={40} color='#0000008f' />
+                  )
+                }
+              </div>
+              {/* Hidden file input */}
+              <label className="absolute top-13 right-2">
+                <ImageUp size={25} className='bg-white rounded-full p-1' />
+                <input
+                  type="file"
+                  name="profilePhoto"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handlePhotoChange}
+                  className="hidden"
+                />
+              </label>
+            </div>
+
             {/* Row 1: Name & Email */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Input
-                isRequired
-                type="text"
-                label="Full Name"
-                labelPlacement="outside"
-                placeholder="Enter your full name"
-                size="lg"
-                radius="md"
-                variant="bordered"
-                startContent={<User className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700" }}
-              />
+              <TextField name="name" isRequired className="w-full">
+                <Label className="font-bold text-default-700 mb-1">Full Name</Label>
+                <InputGroup className="h-12 border border-default-200 rounded-md">
+                  <InputGroup.Prefix>
+                    <User className="w-5 h-5 text-default-400 mx-3 flex-shrink-0" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input placeholder="Enter your full name" />
+                </InputGroup>
+              </TextField>
 
-              <Input
-                isRequired
-                type="email"
-                label="Email Address"
-                labelPlacement="outside"
-                placeholder="name@example.com"
-                size="lg"
-                radius="md"
-                variant="flat"
-                color="primary"
-                startContent={<Mail className="w-5 h-5 text-primary-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700", inputWrapper: "bg-primary-50 hover:bg-primary-100" }}
-              />
+              <TextField name="email" type="email" isRequired className="w-full">
+                <Label className="font-bold text-default-700 mb-1">Email Address</Label>
+                <InputGroup className="h-12 bg-primary-50 hover:bg-primary-100 border-none rounded-md">
+                  <InputGroup.Prefix>
+                    <Mail className="w-5 h-5 text-primary-400 mx-3 flex-shrink-0" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input placeholder="name@example.com" />
+                </InputGroup>
+              </TextField>
             </div>
 
             {/* Row 2: Phone & Gender */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Input
-                isRequired
-                type="tel"
-                label="Phone Number"
-                labelPlacement="outside"
-                placeholder="+880 1XXX XXXXXX"
-                size="lg"
-                radius="md"
-                variant="bordered"
-                startContent={<Phone className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700" }}
-              />
+              <TextField name="phone" type="tel" isRequired className="w-full">
+                <Label className="font-bold text-default-700 mb-1">Phone Number</Label>
+                <InputGroup className="h-12 border border-default-200 rounded-md">
+                  <InputGroup.Prefix>
+                    <Phone className="w-5 h-5 text-default-400 mx-3 flex-shrink-0" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input placeholder="+880 1XXX XXXXXX" />
+                </InputGroup>
+              </TextField>
 
-              <Select
-                isRequired
-                label="Gender"
-                labelPlacement="outside"
-                placeholder="Select Gender"
-                size="lg"
-                radius="md"
-                variant="bordered"
-                startContent={<User className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700" }}
-              >
-                <SelectItem key="male" value="male">Male</SelectItem>
-                <SelectItem key="female" value="female">Female</SelectItem>
+              <Select name="gender" placeholder="Select Gender" isRequired className="w-full">
+                <Label className="font-bold text-default-700 mb-1">Gender</Label>
+                <Select.Trigger className="h-12 border border-default-200 rounded-md px-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <User className="w-5 h-5 text-default-400 flex-shrink-0" />
+                    <Select.Value />
+                  </div>
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    <ListBox.Item id="male" textValue="Male">Male</ListBox.Item>
+                    <ListBox.Item id="female" textValue="Female">Female</ListBox.Item>
+                  </ListBox>
+                </Select.Popover>
               </Select>
             </div>
 
             {/* Row 3: District & Upazila */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Select
-                isRequired
-                label="District"
-                labelPlacement="outside"
-                placeholder="Select District"
-                size="lg"
-                radius="md"
-                variant="bordered"
-                startContent={<MapPin className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700" }}
-              >
-                <SelectItem key="khulna" value="khulna">Khulna</SelectItem>
-                <SelectItem key="dhaka" value="dhaka">Dhaka</SelectItem>
+              <Select name="district" placeholder="Select District" isRequired className="w-full">
+                <Label className="font-bold text-default-700 mb-1">District</Label>
+                <Select.Trigger className="h-12 border border-default-200 rounded-md px-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-5 h-5 text-default-400 flex-shrink-0" />
+                    <Select.Value />
+                  </div>
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    <ListBox.Item id="khulna" textValue="Khulna">Khulna</ListBox.Item>
+                    <ListBox.Item id="dhaka" textValue="Dhaka">Dhaka</ListBox.Item>
+                  </ListBox>
+                </Select.Popover>
               </Select>
 
-              <Select
-                isRequired
-                label="Upazila"
-                labelPlacement="outside"
-                placeholder="Select Upazila"
-                size="lg"
-                radius="md"
-                variant="bordered"
-                startContent={<Map className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700" }}
-              >
-                <SelectItem key="phultala" value="phultala">Phultala</SelectItem>
-                <SelectItem key="daulatpur" value="daulatpur">Daulatpur</SelectItem>
+              <Select name="upazila" placeholder="Select Upazila" isRequired className="w-full">
+                <Label className="font-bold text-default-700 mb-1">Upazila</Label>
+                <Select.Trigger className="h-12 border border-default-200 rounded-md px-3 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Map className="w-5 h-5 text-default-400 flex-shrink-0" />
+                    <Select.Value />
+                  </div>
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    <ListBox.Item id="phultala" textValue="Phultala">Phultala</ListBox.Item>
+                    <ListBox.Item id="daulatpur" textValue="Daulatpur">Daulatpur</ListBox.Item>
+                  </ListBox>
+                </Select.Popover>
               </Select>
             </div>
 
@@ -153,52 +206,59 @@ const Registration = () => {
                     radius="md"
                     variant={selectedBloodGroup === group ? "flat" : "bordered"}
                     color={selectedBloodGroup === group ? "danger" : "default"}
-                    className={`flex-1 min-w-[70px] py-6 font-bold transition-all ${
-                      selectedBloodGroup === group 
-                        ? 'bg-danger-50 border-danger-500 text-danger-600 shadow-sm border' 
-                        : 'bg-white text-default-700'
-                    }`}
+                    className={`flex-1 min-w-[70px] py-6 font-bold transition-all ${selectedBloodGroup === group
+                      ? 'bg-danger-50 border-danger-500 text-danger-600 shadow-sm border'
+                      : 'bg-white text-default-700'
+                      }`}
                   >
                     {group}
                   </Button>
                 ))}
+                <input type="hidden" name="bloodGroup" value={selectedBloodGroup} required />
               </div>
             </div>
 
             {/* Row 4: Passwords */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-              <Input
+              <TextField
+                name="password"
                 isRequired
-                type="password"
-                label="Password"
-                labelPlacement="outside"
-                placeholder="••••••••"
-                size="lg"
-                radius="md"
-                variant="flat"
-                color="primary"
-                startContent={<Lock className="w-5 h-5 text-primary-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700", inputWrapper: "bg-primary-50 hover:bg-primary-100", input: "tracking-widest" }}
-              />
+                className="w-full"
+                value={password}
+                onChange={setPassword}
+              >
+                <Label className="font-bold text-default-700 mb-1">Password</Label>
+                <InputGroup className="h-12 bg-primary-50 hover:bg-primary-100 border-none rounded-md">
+                  <InputGroup.Prefix>
+                    <Lock className="w-5 h-5 text-primary-400 mx-3 flex-shrink-0" />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input type="password" placeholder="••••••••" className="tracking-widest" />
+                </InputGroup>
+              </TextField>
 
-              <Input
+              <TextField
+                name="confirmPassword"
                 isRequired
-                type="password"
-                label="Confirm Password"
-                labelPlacement="outside"
-                placeholder="••••••••"
-                size="lg"
-                radius="md"
-                variant="bordered"
-                startContent={<RotateCcw className="w-5 h-5 text-default-400 pointer-events-none flex-shrink-0" />}
-                classNames={{ label: "font-bold text-default-700", input: "tracking-widest" }}
-              />
+                className="w-full"
+                isInvalid={isPasswordInvalid}
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+              >
+                <Label className="font-bold text-default-700 mb-1">Confirm Password</Label>
+                <InputGroup className={`h-12 border rounded-md ${isPasswordInvalid ? 'border-danger-500' : 'border-default-200'}`}>
+                  <InputGroup.Prefix>
+                    <RotateCcw className={`w-5 h-5 mx-3 flex-shrink-0 ${isPasswordInvalid ? 'text-danger' : 'text-default-400'}`} />
+                  </InputGroup.Prefix>
+                  <InputGroup.Input type="password" placeholder="••••••••" className="tracking-widest" />
+                </InputGroup>
+                <FieldError>{isPasswordInvalid ? "Passwords do not match." : ""}</FieldError>
+              </TextField>
             </div>
 
             {/* Submit Button */}
             <div className="pt-6">
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 color="danger"
                 size="lg"
                 radius="md"
@@ -207,7 +267,7 @@ const Registration = () => {
                 Complete Registration
               </Button>
             </div>
-            
+
             {/* Login Link */}
             <div className="text-center pt-2">
               <p className="text-sm font-medium text-default-600">

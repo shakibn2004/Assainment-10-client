@@ -3,20 +3,25 @@ import React, { useState } from 'react';
 import { Droplets, User, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import UserProfileCard from './UserProfileCard';
+import { authClient } from '@/lib/auth-client';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(false);
   const [prCard, setPrCard] = useState(false);
-   
+  const {
+    data: session,
+    isPending,
+    error
+  } = authClient.useSession();
+
   const allNavLinks = [
     { name: 'Home', url: '/', active: true },
     { name: 'Donation Requests', url: '/donation-requests', active: false },
     { name: 'Search Donor', url: '/search', active: false },
-    { name: 'Funding', url: '/search', active: false },
+    { name: 'Funding', url: '/funding', active: false },
   ];
 
-  const navLinks = user
+  const navLinks = session
     ? allNavLinks.filter(link => link.name !== "Search Donor")
     : allNavLinks.filter(link => link.name !== "Funding");
 
@@ -54,17 +59,17 @@ const Navbar = () => {
 
           {/* Login Button (Desktop) */}
           <div className="hidden md:flex items-center">
-            <Link onClick={() => setUser(true)} className={`${user ? "hidden" : "flex"} items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg`} href={'/login'}>
+            <Link className={`${session ? "hidden" : "flex"} items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-medium transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg`} href={'/login'}>
               <User className="w-5 h-5" />
               Login
             </Link>
-            <div onClick={() => setPrCard(p => !p)} className={`${user ? "flex" : "hidden"} w-12 h-12 text-3xl cursor-pointer flex items-center justify-center rounded-full  hover:border-2 hover:border-red-500`}>
+            <div onClick={() => setPrCard(p => !p)} className={`${session ? "flex" : "hidden"} w-12 h-12 text-3xl cursor-pointer flex items-center justify-center rounded-full  hover:border-2 hover:border-red-500`}>
               PR
             </div>
           </div>
 
           {/* User Profile Card */}
-          <UserProfileCard user={user} setUser={setUser} prCard={prCard} />
+          <UserProfileCard session={session} prCard={prCard} />
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
