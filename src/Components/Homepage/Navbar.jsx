@@ -4,6 +4,7 @@ import { Droplets, User, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import UserProfileCard from './UserProfileCard';
 import { authClient } from '@/lib/auth-client';
+import Image from 'next/image';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,8 +64,8 @@ const Navbar = () => {
               <User className="w-5 h-5" />
               Login
             </Link>
-            <div onClick={() => setPrCard(p => !p)} className={`${session ? "flex" : "hidden"} w-12 h-12 text-3xl cursor-pointer flex items-center justify-center rounded-full  hover:border-2 hover:border-red-500`}>
-              PR
+            <div onClick={() => setPrCard(p => !p)} className={`${session ? "flex" : "hidden"} overflow-hidden px-1 pt-0.5 w-12 h-12 text-3xl cursor-pointer flex items-center justify-center rounded-full shadow-[0_0_2px]  hover:border-2 hover:border-red-500`}>
+              <Image width={0} height={0} sizes='100vw' style={{width: '100%', height: '100%'}} src={session?.user?.image} alt='User Image'/>
             </div>
           </div>
 

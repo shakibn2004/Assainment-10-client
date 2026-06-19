@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Camera, User, Mail, Phone, MapPin, Map, Lock, RotateCcw, ImageUp, CircleUserRound } from 'lucide-react';
 import {
   TextField, Label, InputGroup,
@@ -7,12 +7,36 @@ import {
 } from "@heroui/react";
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
+import { image } from 'framer-motion/client';
 
 const Registration = () => {
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
+  const [district, setDistrict] = useState('');
+  const [upazila, setUpazila] = useState('');
+  const [districts, setDistricts] = useState([]);
+  const [upazilas, setUpazilas] = useState([]);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
+
+
+  // Sample data for the dropdowns
+  useEffect(() => {
+    const handleFetch = async () => {
+      const districtsPromised = await fetch('http://localhost:8000/bddistricts');
+      const districts = await districtsPromised.json();
+      setDistricts(districts);
+      const districtPromised = await fetch(`http://localhost:8000/bddistricts/${district}`);
+      const districtData = await districtPromised.json();
+      const upazilasPromised = await fetch(`http://localhost:8000/bdupazilas/${districtData.id}`);
+      const upazilas = await upazilasPromised.json();
+      setUpazilas(upazilas);
+    }
+
+    handleFetch();
+  }, [district])
+
 
   // New state & ref for profile photo
   const [profilePhotoPreview, setProfilePhotoPreview] = useState(null);
@@ -24,15 +48,30 @@ const Registration = () => {
   const isPasswordInvalid = confirmPassword !== '' && password !== confirmPassword;
 
   const { data: session, isPending, error } = authClient.useSession();
-  console.log(session);
 
   // Handle image selection & preview
-  const handlePhotoChange = (e) => {
+  const handlePhotoChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfilePhotoPreview(imageUrl);
-    }
+    if (!file) return;
+
+    const imageUrl = URL.createObjectURL(file);
+    setProfilePhotoPreview(imageUrl);
+
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const res = await fetch(
+      `https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_KEY}`,
+      {
+        method: 'POST',
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    const url = data?.data?.url;
+    setUploadedImageUrl(url);
   };
 
   const handleSignup = async (e) => {
@@ -41,24 +80,35 @@ const Registration = () => {
     const formData = new FormData(e.currentTarget);
     const userData = Object.fromEntries(formData.entries());
 
-    const { name, email, password } = userData;
+    const { name, email, password, bloodGroup, district, phone, upazila, gender } = userData;
 
-    const { data, error } = await authClient.signUp.email({
+    const dbUserData = {
       name,
       email,
-      password,
-    }, {
-      onSuccess: () => {
-        router.push('/')
-      }, onError: (ctx) => {
-        alert(ctx.error.message)
-      }
+      bloodGroup,
+      district,
+      phone,
+      upazila,
+      gender,
+      role: "doner",
+      status: "active",
+      image: uploadedImageUrl
+    };
+
+    await fetch(`http://localhost:8000/allusers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dbUserData),
     });
 
-
-    // userData.profilePhoto will now contain the actual File object!
-    console.log("Form Submitted:", name);
-  }
+    await authClient.signUp.email(
+      { name, email, password, image: uploadedImageUrl },
+      {
+        onSuccess: () => router.push('/'),
+        onError: (ctx) => alert(ctx.error.message),
+      }
+    );
+  };
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] py-12 px-4 sm:px-6 flex justify-center items-center">
@@ -159,19 +209,32 @@ const Registration = () => {
 
             {/* Row 3: District & Upazila */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Select name="district" placeholder="Select District" isRequired className="w-full">
+              <Select name="district"
+                onChange={(value) => {
+                  setDistrict(value);
+                }}
+                placeholder="Select District" isRequired className="w-full">
                 <Label className="font-bold text-default-700 mb-1">District</Label>
                 <Select.Trigger className="h-12 border border-default-200 rounded-md px-3 flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MapPin className="w-5 h-5 text-default-400 flex-shrink-0" />
+                    <MapPin className="w-5 h-5 text-default-400 shrink-0" />
                     <Select.Value />
                   </div>
                   <Select.Indicator />
                 </Select.Trigger>
                 <Select.Popover>
                   <ListBox>
-                    <ListBox.Item id="khulna" textValue="Khulna">Khulna</ListBox.Item>
-                    <ListBox.Item id="dhaka" textValue="Dhaka">Dhaka</ListBox.Item>
+                    {districts.map((d) => {
+                      return (
+                        <ListBox.Item
+                          key={d.id}
+                          id={d.name}
+                          textValue={d.name}
+                        >
+                          {d.name}
+                        </ListBox.Item>
+                      );
+                    })}
                   </ListBox>
                 </Select.Popover>
               </Select>
@@ -187,8 +250,17 @@ const Registration = () => {
                 </Select.Trigger>
                 <Select.Popover>
                   <ListBox>
-                    <ListBox.Item id="phultala" textValue="Phultala">Phultala</ListBox.Item>
-                    <ListBox.Item id="daulatpur" textValue="Daulatpur">Daulatpur</ListBox.Item>
+                    {upazilas.map((u) => {
+                      return (
+                        <ListBox.Item
+                          key={u.id}
+                          id={u.name}
+                          textValue={u.name}
+                        >
+                          {u.name}
+                        </ListBox.Item>
+                      );
+                    })}
                   </ListBox>
                 </Select.Popover>
               </Select>
