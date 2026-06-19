@@ -1,6 +1,7 @@
 import React from 'react';
 import { Wallet, FileText, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import { PaginationBasic } from '@/Components/Homepage/Pagination';
+import FundModal from '@/Components/Homepage/FundModal';
 
 
 const FundingHistory = async ({ searchParams }) => {
@@ -24,10 +25,7 @@ const FundingHistory = async ({ searchParams }) => {
 
                 {/* Action Button */}
                 <div className="flex justify-end mb-4">
-                    <button className="bg-[#E60023] hover:bg-red-700 transition-colors text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm">
-                        <Wallet size={18} />
-                        Give Fund
-                    </button>
+                    <FundModal />
                 </div>
 
                 {/* Table Card */}
@@ -88,10 +86,10 @@ const FundingHistory = async ({ searchParams }) => {
 
                     {/* Pagination Footer */}
                     <div className="border-t border-gray-100 px-6 py-5 flex items-center justify-between bg-white rounded-b-[2rem]">
-                        <p className="text-sm font-semibold text-gray-500">
-                            Showing <span className="text-gray-900">1</span> to <span className="text-gray-900">10</span> of <span className="text-gray-900">23</span> results
+                        <p className="text-sm flex gap-1 font-semibold text-gray-500">
+                            Showing <span className="text-gray-900">{(data.page - 1) * data.limit + 1}</span> to <span className="text-gray-900">{(data.page - 1) * data.limit + fundingData.length}</span> of <span className="text-gray-900">{data.totalData}</span> results
                         </p>
-                        <PaginationBasic totalPages={data.totalPage} page={page}/>
+                        <PaginationBasic totalPages={data.totalPage} page={page} />
                     </div>
                 </div>
 
