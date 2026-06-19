@@ -7,8 +7,17 @@ import {
     Lock,
     Droplet
 } from 'lucide-react';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
+import Image from 'next/image';
 
-const ProfileSettings = () => {
+const ProfileSettings = async (req) => {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+    const res = await fetch(`http://localhost:8000/allusers/${session.user.email}`);
+    const userData = await res.json();
+    console.log(userData);
     return (
         <div className="flex-1 overflow-auto w-full max-w-5xl mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
 
@@ -47,15 +56,14 @@ const ProfileSettings = () => {
 
                     {/* Avatar and Name */}
                     <div className="flex gap-6 -mt-16 relative z-10">
-                        <img
-                            src="https://i.pravatar.cc/300?img=11" // Replace with actual user image
-                            alt="Md Nazmus Shakib"
-                            className="w-[140px] h-[140px] rounded-full border-[6px] border-white object-cover bg-gray-200 shadow-sm"
-                        />
+                        <div className='w-30 h-30 rounded-full overflow-hidden'>
+                            <Image width={0} height={0} sizes='100vw' style={{ width: '100%', height: '100%' }} src={userData.image} alt='User Image' />
+
+                        </div>
                         <div className="pt-20">
                             <div className="flex items-center gap-4">
                                 <h2 className="text-[2rem] font-black text-slate-900 leading-none">
-                                    Md Nazmus Shakib
+                                    {userData.name}
                                 </h2>
                                 <span className="flex items-center gap-1.5 px-3 py-1 bg-[#e8f5ed] text-[#129148] text-[0.65rem] font-extrabold uppercase tracking-wide rounded-full border border-green-100">
                                     <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={3} />
@@ -64,7 +72,7 @@ const ProfileSettings = () => {
                             </div>
                             <div className="flex items-center gap-1.5 mt-2.5 text-slate-500 font-semibold text-[0.95rem]">
                                 <MapPin className="w-[18px] h-[18px] text-[#ed2547]" strokeWidth={2.5} />
-                                Keshabpur, Jashore
+                                {userData.district},{userData.upazila}
                             </div>
                         </div>
                     </div>
@@ -72,10 +80,10 @@ const ProfileSettings = () => {
                     {/* Blood Group Floating Badge */}
                     <div className="absolute top-[-45px] right-10 bg-[#fdf2f3] border border-red-100 rounded-3xl p-4 flex flex-col items-center justify-center w-[130px] shadow-sm z-10">
                         <span className="text-[0.6rem] font-black text-[#e85c6f] tracking-[0.15em] uppercase mb-0.5">
-                            Blood Group
+                            {userData.bloodGroup}
                         </span>
                         <span className="text-[2.75rem] font-black text-[#ed2547] leading-none drop-shadow-sm">
-                            B+
+                            {userData.bloodGroup}
                         </span>
                     </div>
                 </div>
@@ -101,7 +109,7 @@ const ProfileSettings = () => {
                                         Full Name
                                     </label>
                                     <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-800">
-                                        Md Nazmus Shakib
+                                        {userData.name}
                                     </div>
                                 </div>
 
@@ -110,7 +118,7 @@ const ProfileSettings = () => {
                                         Email (Fixed)
                                     </label>
                                     <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-500 flex justify-between items-center">
-                                        shakibn2004@gmail.com
+                                        {userData.email}
                                         <Lock className="w-4 h-4 text-slate-400" strokeWidth={2} />
                                     </div>
                                 </div>
@@ -132,7 +140,7 @@ const ProfileSettings = () => {
                                         District
                                     </label>
                                     <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-800">
-                                        Jashore
+                                        {userData.district}
                                     </div>
                                 </div>
 
@@ -141,7 +149,7 @@ const ProfileSettings = () => {
                                         Upazila
                                     </label>
                                     <div className="bg-[#f8f9fa] px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-slate-800">
-                                        Keshabpur
+                                        {userData.upazila}
                                     </div>
                                 </div>
                             </div>
@@ -168,7 +176,7 @@ const ProfileSettings = () => {
                                     Blood Group
                                 </label>
                                 <div className="bg-white px-5 py-4 rounded-2xl shadow-sm border border-red-50 text-xl font-black text-[#ed2547]">
-                                    B+
+                                    {userData.bloodGroup}
                                 </div>
                             </div>
 

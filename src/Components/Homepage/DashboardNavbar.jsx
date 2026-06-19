@@ -2,7 +2,8 @@ import { Droplets } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
 
-const DashboardNavbar = () => {
+const DashboardNavbar = async () => {
+
     return (
         <header className="sticky top-0 flex px-10 w-full h-[90px] bg-white border-b border-gray-100 font-sans">
 
