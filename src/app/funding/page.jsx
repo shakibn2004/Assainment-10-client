@@ -1,12 +1,13 @@
 import React from 'react';
 import { Wallet, FileText, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
+import { PaginationBasic } from '@/Components/Homepage/Pagination';
 
 
 const FundingHistory = async ({ searchParams }) => {
     const { page } = await searchParams;
-    console.log(page);
-    const fundingPromised = await fetch(`http://localhost:8000/funding?page=3`);
-    const fundingData = await fundingPromised.json();
+    const fundingPromised = await fetch(`http://localhost:8000/funding?page=${page}`);
+    const data = await fundingPromised.json();
+    const fundingData = data.data;
     return (
         <div className="min-h-screen bg-[#F8F9FA] py-12 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-6xl mx-auto">
@@ -90,23 +91,7 @@ const FundingHistory = async ({ searchParams }) => {
                         <p className="text-sm font-semibold text-gray-500">
                             Showing <span className="text-gray-900">1</span> to <span className="text-gray-900">10</span> of <span className="text-gray-900">23</span> results
                         </p>
-                        <div className="flex items-center gap-2">
-                            <button className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-400 hover:bg-gray-50 transition-colors">
-                                <ChevronLeft size={16} strokeWidth={3} />
-                            </button>
-                            <button className="w-9 h-9 flex items-center justify-center rounded-full bg-[#E60023] text-white font-bold text-sm shadow-sm">
-                                1
-                            </button>
-                            <button className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition-colors">
-                                2
-                            </button>
-                            <button className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 font-bold text-sm hover:bg-gray-50 transition-colors">
-                                3
-                            </button>
-                            <button className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors">
-                                <ChevronRight size={16} strokeWidth={3} />
-                            </button>
-                        </div>
+                        <PaginationBasic totalPages={data.totalPage} page={page}/>
                     </div>
                 </div>
 
