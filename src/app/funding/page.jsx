@@ -2,6 +2,7 @@ import React from 'react';
 import { Wallet, FileText, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
 import { PaginationBasic } from '@/Components/Homepage/Pagination';
 import FundModal from '@/Components/Homepage/FundModal';
+import { stripe } from '@/lib/stripe';
 
 
 const FundingHistory = async ({ searchParams }) => {
@@ -9,6 +10,7 @@ const FundingHistory = async ({ searchParams }) => {
     const fundingPromised = await fetch(`http://localhost:8000/funding?page=${page}`);
     const data = await fundingPromised.json();
     const fundingData = data.data;
+
     return (
         <div className="min-h-screen bg-[#F8F9FA] py-12 px-4 sm:px-6 lg:px-8 font-sans">
             <div className="max-w-6xl mx-auto">
@@ -87,7 +89,7 @@ const FundingHistory = async ({ searchParams }) => {
                     {/* Pagination Footer */}
                     <div className="border-t border-gray-100 px-6 py-5 flex items-center justify-between bg-white rounded-b-[2rem]">
                         <p className="text-sm flex gap-1 font-semibold text-gray-500">
-                            Showing <span className="text-gray-900">{(data.page - 1) * data.limit + 1}</span> to <span className="text-gray-900">{(data.page - 1) * data.limit + fundingData.length}</span> of <span className="text-gray-900">{data.totalData}</span> results
+                            Showing <span className="text-gray-900">{data.page ? ((data.page - 1) * data.limit + 1) : 1}</span> to <span className="text-gray-900">{(data.page ? data.page - 1 : 0) * data.limit + fundingData.length}</span> of <span className="text-gray-900">{data.totalData}</span> results
                         </p>
                         <PaginationBasic totalPages={data.totalPage} page={page} />
                     </div>

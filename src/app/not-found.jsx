@@ -1,5 +1,6 @@
 import React from 'react';
 import { Droplet, AlertCircle, Home, Search, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 
 const NotFoundPage = () => {
   return (
@@ -40,13 +41,13 @@ const NotFoundPage = () => {
           {/* Back to Home Button */}
           <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#e11d48] hover:bg-rose-600 text-white px-8 py-3.5 rounded-xl font-bold transition-all duration-300 shadow-lg shadow-rose-500/20 hover:-translate-y-0.5">
             <Home className="w-4 h-4" />
-            <span>Back to Home</span>
+            <Link href={'/'}>Back to Home</Link>
           </button>
           
           {/* Search Donors Button */}
           <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-8 py-3.5 rounded-xl font-bold transition-all duration-300 shadow-sm hover:-translate-y-0.5">
             <Search className="w-4 h-4" />
-            <span>Search Donors</span>
+            <Link href={'/search'}>Search Donors</Link>
           </button>
           
         </div>
