@@ -5,7 +5,7 @@ import React from 'react';
 const DashboardNavbar = async () => {
 
     return (
-        <header className="sticky top-0 flex px-10 w-full h-[90px] bg-white border-b border-gray-100 font-sans">
+        <header className="sticky top-0 flex px-10 w-full h-22.5 bg-black border-b border-gray-100 font-sans">
 
             {/* Logo Section */}
             <Link href='/' className="flex items-center gap-2 cursor-pointer">
@@ -14,16 +14,16 @@ const DashboardNavbar = async () => {
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight">
                     <span className="text-red-600">Blood</span>
-                    <span className="text-slate-900">Bridge</span>
+                    <span className="text-white">Bridge</span>
                 </h1>
             </Link>
 
             {/* Right Dashboard Header Section */}
-            <div className="flex-1 flex items-center justify-between px-8 bg-[#fdfdfd]">
+            <div className="flex-1 flex items-center justify-between px-8">
 
                 {/* Title & Subtitle */}
                 <div className="flex flex-col justify-center">
-                    <h1 className="text-[1.75rem] font-black text-slate-900 leading-none mb-1.5 tracking-tight">
+                    <h1 className="text-[1.75rem] font-black text-white leading-none mb-1.5 tracking-tight">
                         Dashboard
                     </h1>
                     <p className="text-[0.7rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase">

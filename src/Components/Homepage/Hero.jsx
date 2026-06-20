@@ -3,7 +3,7 @@ import { ShieldCheck, ArrowRight, Search, Users, DollarSign, Droplet } from 'luc
 
 const Hero = () => {
   return (
-    <div className="relative w-full bg-slate-50 min-h-screen">
+    <div className="relative w-full bg-black min-h-screen">
       
       <div className="relative w-full h-150 rounded-b-[3rem] overflow-hidden">
 
@@ -56,7 +56,7 @@ const Hero = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* Card 1: Active Donors */}
-          <div className="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 flex flex-col items-center justify-center transform transition-transform hover:-translate-y-1">
+          <div className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center transform transition-transform hover:-translate-y-1">
             <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center mb-3 text-rose-500">
               <Users className="w-5 h-5" />
             </div>
@@ -74,7 +74,7 @@ const Hero = () => {
           </div>
 
           {/* Card 3: Total Requests */}
-          <div className="bg-white rounded-2xl p-6 shadow-xl shadow-slate-200/50 flex flex-col items-center justify-center transform transition-transform hover:-translate-y-1">
+          <div className="bg-white rounded-2xl p-6 flex flex-col items-center justify-center transform transition-transform hover:-translate-y-1">
             <div className="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center mb-3 text-rose-500">
               <Droplet className="w-5 h-5" />
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { UserPlus, Search, Droplet, CheckCircle2 } from 'lucide-react';
+import Link from 'next/link';
 
 const HowItWorks = () => {
   const steps = [
@@ -38,15 +39,15 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
         <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
             Getting Started is <span className="text-rose-600">Simple</span>
           </h2>
-          <p className="text-slate-500 text-lg md:text-xl font-medium leading-relaxed px-4">
+          <p className="text-slate-300 text-lg md:text-xl font-medium leading-relaxed px-4">
             Follow these four easy steps to either find blood donors or start saving
             lives as a volunteer.
           </p>
@@ -71,8 +72,8 @@ const HowItWorks = () => {
               </div>
 
               {/* Text Content */}
-              <h3 className="text-xl font-bold text-slate-900 mb-3">{step.title}</h3>
-              <p className="text-slate-500 leading-relaxed text-sm px-2">
+              <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
+              <p className="text-slate-300 leading-relaxed text-sm px-2">
                 {step.description}
               </p>
             </div>
@@ -87,9 +88,9 @@ const HowItWorks = () => {
             </span>
             <p className="text-sm font-medium text-slate-700">
               Join 15,000+ heroes today.{' '}
-              <a href="#" className="text-rose-600 font-bold hover:underline ml-1">
+              <Link href="/register" className="text-rose-600 font-bold hover:underline ml-1">
                 Create Account
-              </a>
+              </Link>
             </p>
           </div>
         </div>

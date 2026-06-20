@@ -27,7 +27,7 @@ const Navbar = () => {
     : allNavLinks.filter(link => link.name !== "Funding");
 
   return (
-    <nav className="sticky w-full top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100 transition-all duration-300">
+    <nav className="bg-black/90 sticky w-full top-0 z-50 backdrop-blur-md shadow-sm border-b border-gray-100 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
 
@@ -38,7 +38,7 @@ const Navbar = () => {
             </div>
             <h1 className="text-2xl font-bold tracking-tight">
               <span className="text-red-600">Blood</span>
-              <span className="text-slate-900">Bridge</span>
+              <span className="text-white">Bridge</span>
             </h1>
           </Link>
 
@@ -50,7 +50,7 @@ const Navbar = () => {
                 href={link.url}
                 className={`font-medium text-base transition-colors duration-200 ${link.active
                   ? 'text-red-600'
-                  : 'text-slate-700 hover:text-red-600'
+                  : 'text-white hover:text-red-600'
                   }`}
               >
                 {link.name}
