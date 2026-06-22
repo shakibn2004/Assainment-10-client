@@ -67,7 +67,7 @@ const FundingHistory = async ({ searchParams }) => {
                                             <p className="text-sm font-bold text-gray-700">{row.date}</p>
                                         </td>
                                         <td className="py-4 px-6">
-                                            <p className="text-base font-black text-gray-900">{row.amount}</p>
+                                            <p className="text-base font-black text-gray-900">${row.amount}</p>
                                         </td>
                                         <td className="py-4 px-6">
                                             <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
