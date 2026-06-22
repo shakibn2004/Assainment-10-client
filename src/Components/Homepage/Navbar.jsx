@@ -5,10 +5,12 @@ import Link from 'next/link';
 import UserProfileCard from './UserProfileCard';
 import { authClient } from '@/lib/auth-client';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [prCard, setPrCard] = useState(false);
+  const pathName = usePathname()
   const {
     data: session,
     isPending,
@@ -48,7 +50,7 @@ const Navbar = () => {
               <Link
                 key={link.name}
                 href={link.url}
-                className={`font-medium text-base transition-colors duration-200 ${link.active
+                className={`font-medium text-base transition-colors duration-200 ${link.url === pathName
                   ? 'text-red-600'
                   : 'text-white hover:text-red-600'
                   }`}

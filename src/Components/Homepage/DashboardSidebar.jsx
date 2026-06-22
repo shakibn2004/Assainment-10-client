@@ -3,11 +3,13 @@ import { authClient } from '@/lib/auth-client';
 import { Droplet, LayoutGrid, LogOut, Pencil, UserCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const DashboardSidebar = () => {
     const [userData, setUserData] = useState([])
+    const pathName = usePathname();
+
     const {
         data: session,
         isPending,
@@ -54,7 +56,7 @@ const DashboardSidebar = () => {
                         {/* Active Item */}
                         <Link
                             href="/dashboard"
-                            className={`flex items-center gap-4 px-4 py-3.5 hover:bg-red-600 hover:text-white text-slate-500 rounded-2xl transition-transform active:scale-[0.98]`}
+                            className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} rounded-2xl transition-transform active:scale-[0.98]`}
                         >
                             <LayoutGrid className="w-[1.35rem] h-[1.35rem]" strokeWidth={2.5} />
                             <span className="font-bold text-[1.05rem]">Dashboard</span>
@@ -63,7 +65,7 @@ const DashboardSidebar = () => {
                         {/* Inactive Item */}
                         <Link
                             href="/dashboard/my-profile"
-                            className="flex items-center gap-4 px-4 py-3.5 text-slate-500 hover:bg-red-600 hover:text-white rounded-2xl transition-colors"
+                            className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard/my-profile" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} rounded-2xl transition-colors`}
                         >
                             <UserCircle className="w-[1.35rem] h-[1.35rem]" strokeWidth={2} />
                             <span className="font-bold text-[1.05rem]">My Profile</span>
@@ -79,7 +81,7 @@ const DashboardSidebar = () => {
                     <nav className="flex flex-col gap-2">
                         <Link
                             href="/dashboard/my-donation-requests"
-                            className="flex items-center gap-4 px-4 py-3.5 text-slate-500 hover:bg-red-600 hover:text-white rounded-2xl transition-colors"
+                            className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard/my-donation-requests" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} text-slate-500 rounded-2xl transition-colors`}
                         >
                             <Droplet className="w-[1.35rem] h-[1.35rem]" strokeWidth={2} />
                             <span className="font-bold text-[1.05rem]">My Requests</span>
@@ -87,7 +89,7 @@ const DashboardSidebar = () => {
 
                         <Link
                             href="/dashboard/create-donation-request"
-                            className="flex items-center gap-4 px-4 py-3.5 text-slate-500 hover:bg-red-600 hover:text-white rounded-2xl transition-colors"
+                            className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard/create-donation-request" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} text-slate-500 rounded-2xl transition-colors`}
                         >
                             <Pencil className="w-[1.35rem] h-[1.35rem]" strokeWidth={2} />
                             <span className="font-bold text-[1.05rem]">Create Request</span>

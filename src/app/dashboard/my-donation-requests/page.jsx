@@ -1,79 +1,199 @@
-import React from 'react';
-import { Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+'use client'
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Filter, 
+  MapPin, 
+  MoreVertical, 
+  Eye, 
+  Edit2, 
+  ChevronLeft, 
+  ChevronRight 
+} from 'lucide-react';
 
-const DonationRequests = () => {
+const DonationDashboard = () => {
+  const [openMenuId, setOpenMenuId] = useState(null);
+  const menuRef = useRef(null);
+
+  const data = [
+    {
+      id: '01',
+      name: 'Saifulla',
+      postedBy: 'POSTED BY YOU',
+      location: 'Brahmanbaria',
+      group: 'B+',
+      status: 'PENDING',
+    },
+    {
+      id: '02',
+      name: 'Md Nazmus Shaki...',
+      postedBy: 'POSTED BY YOU',
+      location: 'Jashore',
+      group: 'AB+',
+      status: 'PENDING',
+    },
+  ];
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenMenuId(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const toggleMenu = (id) => {
+    setOpenMenuId(openMenuId === id ? null : id);
+  };
+
   return (
-    <div className="w-full max-w-[1200px] mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
-      
-      {/* Top Header Section */}
-      <div className="flex justify-between items-start mb-10">
-        <div>
-          <h1 className="text-[2.5rem] font-black tracking-tight leading-tight">
-            <span className="text-slate-900">My </span>
-            <span className="text-[#ed2547]">Donation Requests</span>
-          </h1>
-          <p className="text-slate-500 font-medium text-[1.05rem] mt-1">
-            Manage and track your blood donation posts.
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#f4f6f8] p-10 font-sans flex justify-center">
+      <div className="w-full max-w-[1200px]">
         
-        {/* Filter Button */}
-        <button className="flex items-center gap-2.5 px-6 py-3.5 bg-white border border-gray-200 rounded-2xl font-bold text-slate-700 shadow-sm hover:bg-gray-50 transition-colors">
-          <Filter className="w-5 h-5 text-slate-500" strokeWidth={2} />
-          All Status
-        </button>
-      </div>
-
-      {/* Table Header Bar (Pill Shape) */}
-      <div className="bg-white rounded-full shadow-[0_12px_40px_rgb(0,0,0,0.06)] border border-gray-100 px-10 py-7 mb-10">
-        <div className="grid grid-cols-12 gap-4 w-full text-[0.75rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase items-center">
-          <div className="col-span-1 pl-2 text-center md:text-left">#</div>
-          <div className="col-span-3">Recipient Info</div>
-          <div className="col-span-3">Location</div>
-          <div className="col-span-2">Group</div>
-          <div className="col-span-2">Status</div>
-          <div className="col-span-1 text-right pr-2">Actions</div>
-        </div>
-      </div>
-
-      {/* 
-        Table Body would go here... 
-        (Omitted in this snippet as it is empty in the design)
-      */}
-
-      {/* Pagination Section */}
-      <div className="flex justify-between items-center px-4 mt-6">
-        {/* Results Counter */}
-        <div className="text-[0.95rem] font-medium text-slate-400">
-          Showing <span className="font-extrabold text-slate-600">1</span> to <span className="font-extrabold text-slate-600">10</span> of <span className="font-extrabold text-slate-600">20</span> results
-        </div>
-        
-        {/* Pagination Controls */}
-        <div className="flex items-center gap-2.5">
-          {/* Previous Page */}
-          <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-100 rounded-xl text-slate-400 hover:bg-gray-50 hover:text-slate-600 shadow-sm transition-colors">
-            <ChevronLeft className="w-5 h-5" strokeWidth={2.5} />
-          </button>
+        {/* Header Section */}
+        <div className="flex justify-between items-end mb-8">
+          <div>
+            <h1 className="text-[2.5rem] font-black tracking-tight text-gray-900 leading-none">
+              My <span className="text-[#f11a3b]">Donation Requests</span>
+            </h1>
+            <p className="text-gray-500 text-lg mt-3 font-medium">
+              Manage and track your blood donation posts.
+            </p>
+          </div>
           
-          {/* Active Page Number */}
-          <button className="w-11 h-11 flex items-center justify-center bg-[#ed2547] text-white rounded-xl font-black text-[1.05rem] shadow-md shadow-red-200 transition-transform active:scale-95">
-            1
-          </button>
-          
-          {/* Inactive Page Number */}
-          <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-100 rounded-xl text-slate-600 font-bold text-[1.05rem] hover:bg-gray-50 shadow-sm transition-colors">
-            2
-          </button>
-          
-          {/* Next Page */}
-          <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-100 rounded-xl text-slate-400 hover:bg-gray-50 hover:text-slate-600 shadow-sm transition-colors">
-            <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
+          <button className="flex items-center gap-3 px-6 py-3.5 bg-white border border-gray-200 rounded-[1rem] shadow-sm hover:bg-gray-50 transition-colors">
+            <Filter className="w-5 h-5 text-gray-500 stroke-[2.5]" />
+            <span className="text-gray-800 font-bold text-lg">All Status</span>
           </button>
         </div>
-      </div>
 
+        {/* Table Section */}
+        <div className="bg-white border border-gray-200 rounded-[2.5rem] shadow-sm overflow-hidden mb-8">
+          <table className="w-full text-left border-collapse">
+            <thead className="bg-[#fcfcfc] border-b border-gray-100">
+              <tr className="text-xs font-bold tracking-widest text-gray-400 uppercase">
+                <th className="px-10 py-8 w-20">#</th>
+                <th className="px-10 py-8">Recipient Info</th>
+                <th className="px-10 py-8">Location</th>
+                <th className="px-10 py-8">Group</th>
+                <th className="px-10 py-8">Status</th>
+                <th className="px-10 py-8 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, index) => (
+                <tr 
+                  key={row.id} 
+                  className={`group border-b border-gray-100 last:border-none bg-white`}
+                >
+                  {/* ID */}
+                  <td className="px-10 py-6">
+                    <span className="text-3xl font-extrabold text-gray-300 tracking-tighter">
+                      {row.id}
+                    </span>
+                  </td>
+
+                  {/* Recipient Info */}
+                  <td className="px-10 py-6">
+                    <div className="flex flex-col">
+                      <span className="text-lg font-bold text-gray-900 leading-tight">
+                        {row.name}
+                      </span>
+                      <span className="text-xs font-bold text-gray-400 mt-1.5 uppercase tracking-wide">
+                        {row.postedBy}
+                      </span>
+                    </div>
+                  </td>
+
+                  {/* Location */}
+                  <td className="px-10 py-6">
+                    <div className="flex items-center gap-2.5 text-gray-800 font-bold text-[17px]">
+                      <MapPin className="w-[22px] h-[22px] text-[#f11a3b] stroke-[2.5]" />
+                      {row.location}
+                    </div>
+                  </td>
+
+                  {/* Group */}
+                  <td className="px-10 py-6">
+                    <span className="inline-flex items-center justify-center px-4 py-2 bg-[#fdf0f0] text-[#f11a3b] font-black text-lg rounded-2xl shadow-sm min-w-[3.5rem]">
+                      {row.group}
+                    </span>
+                  </td>
+
+                  {/* Status */}
+                  <td className="px-10 py-6">
+                    <span className="inline-flex items-center gap-2.5 px-4 py-2 bg-[#fff7ee] border border-orange-100 text-orange-600 text-[13px] font-bold uppercase rounded-full tracking-wide">
+                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                      {row.status}
+                    </span>
+                  </td>
+
+                  {/* Actions */}
+                  <td className="px-10 py-6 text-right relative" ref={openMenuId === row.id ? menuRef : null}>
+                    <button
+                      onClick={() => toggleMenu(row.id)}
+                      className={`p-2 rounded-xl transition-all ${
+                        openMenuId === row.id 
+                          ? 'bg-gray-100 text-gray-700' 
+                          : 'text-gray-400 hover:bg-gray-50 hover:text-gray-600'
+                      }`}
+                    >
+                      <MoreVertical className="w-6 h-6 stroke-[2.5]" />
+                    </button>
+
+                    {/* Dropdown Modal */}
+                    {openMenuId === row.id && (
+                      <div className="absolute right-24 top-1/2 -translate-y-1/2 z-10 w-52 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 py-2">
+                        <button className="w-full px-5 py-3.5 text-left flex items-center gap-3.5 hover:bg-gray-50 transition-colors group/btn">
+                          <Eye className="w-5 h-5 text-blue-600 group-hover/btn:text-blue-700 stroke-[2.5]" />
+                          <span className="font-bold text-gray-800 text-[15px]">View Details</span>
+                        </button>
+                        
+                        <div className="h-px bg-gray-100 w-full my-0.5"></div>
+                        
+                        <button className="w-full px-5 py-3.5 text-left flex items-center gap-3.5 hover:bg-gray-50 transition-colors group/btn">
+                          <Edit2 className="w-5 h-5 text-orange-500 group-hover/btn:text-orange-600 stroke-[2.5]" />
+                          <span className="font-bold text-gray-800 text-[15px]">Edit Request</span>
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination Section */}
+        <div className="flex justify-between items-center px-4">
+          <div className="text-gray-500 font-semibold text-[15px]">
+            Showing <span className="font-bold text-gray-800">1</span> to <span className="font-bold text-gray-800">10</span> of <span className="font-bold text-gray-800">23</span> results
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <button className="p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-400 transition-colors">
+              <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+            <button className="w-11 h-11 flex items-center justify-center bg-[#f11a3b] text-white font-bold text-[15px] rounded-xl shadow-[0_4px_14px_rgba(241,26,59,0.35)] transition-transform hover:scale-105">
+              1
+            </button>
+            <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-200 text-gray-700 font-bold text-[15px] rounded-xl hover:bg-gray-50 transition-colors">
+              2
+            </button>
+            <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-200 text-gray-700 font-bold text-[15px] rounded-xl hover:bg-gray-50 transition-colors">
+              3
+            </button>
+            <button className="p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-600 transition-colors">
+              <ChevronRight className="w-5 h-5 stroke-[2.5]" />
+            </button>
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };
 
-export default DonationRequests;
+export default DonationDashboard;

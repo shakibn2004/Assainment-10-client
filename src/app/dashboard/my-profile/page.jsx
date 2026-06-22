@@ -1,12 +1,13 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     Pencil,
     CheckCircle2,
     MapPin,
     User,
     Lock,
-    Droplet
+    Droplet,
+    SaveAll
 } from 'lucide-react';
 import Image from 'next/image';
 import { authClient } from '@/lib/auth-client';
@@ -14,6 +15,8 @@ import { authClient } from '@/lib/auth-client';
 const ProfileSettings = (req) => {
     const [userData, setUserData] = useState([]);
     const [editProfile, setEditProfile] = useState(false);
+
+    const formRef = useRef();
 
     const {
         data: session,
@@ -34,11 +37,26 @@ const ProfileSettings = (req) => {
         };
 
         loadData();
+
+
     }, [session]);
 
-    const handleEdit = () => {
-        setEditProfile(pre => { !pre })
+    const handleButton = () => {
+        if (!editProfile) {
+            setEditProfile(true);
+        } else {
+            formRef.current.requestSubmit();
+        }
+    };
+
+    const handleEdit = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.currentTarget);
+        const userData = Object.fromEntries(formData.entries());
+        console.log('ddd');
     }
+
     return (
         <div className="flex-1 overflow-auto w-full max-w-5xl mx-auto p-8 font-sans bg-black min-h-screen">
 
@@ -54,10 +72,17 @@ const ProfileSettings = (req) => {
                     </p>
                 </div>
 
-                <button onClick={() => setEditProfile(pre => !pre)} className="flex items-center gap-2.5 px-6 py-2.5 bg-white border-2 border-red-50 text-[#ed2547] rounded-full font-bold text-[0.95rem] shadow-sm hover:bg-red-50 transition-colors">
-                    <Pencil className="w-4 h-4" strokeWidth={2.5} />
-                    {editProfile ? 'Update Profile' : 'Edit Profile'}
-                </button>
+                <div className='flex gap-6'>
+                    <button onClick={() => setEditProfile(pre => !pre)} className={`${editProfile ? 'flex' : 'hidden'} items-center gap-2.5 px-6 py-2.5 bg-slate-400/50 text-white rounded-full font-bold text-[0.95rem] transition-colors`} >
+                        Cancel
+                    </button>
+                    <button type='Submit' onClick={handleButton} className="flex items-center gap-2.5 px-6 py-2.5 bg-white border-2 border-red-50 text-[#ed2547] rounded-full font-bold text-[0.95rem] shadow-sm hover:bg-red-50 transition-colors">
+                        {
+                            editProfile ? <SaveAll className="w-4 h-4" strokeWidth={2.5} /> : <Pencil className="w-4 h-4" strokeWidth={2.5} />
+                        }
+                        {editProfile ? 'Update Profile' : 'Edit Profile'}
+                    </button>
+                </div>
             </div>
 
             {/* Main Profile Card */}
@@ -110,7 +135,7 @@ const ProfileSettings = (req) => {
                 </div>
 
                 {/* Form Details Grid */}
-                <div className="px-10 pt-12 pb-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <form ref={formRef} onSubmit={handleEdit} className="px-10 pt-12 pb-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
 
                     {/* Left Column (Forms) */}
                     <div className="col-span-2 space-y-10">
@@ -209,9 +234,9 @@ const ProfileSettings = (req) => {
                         </div>
                     </div>
 
-                </div>
+                </form>
             </div>
-        </div>
+        </div >
     );
 };
 

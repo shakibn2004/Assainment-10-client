@@ -1,10 +1,11 @@
+'use client'
 import React from 'react';
-import { 
-  Info, 
-  User, 
-  Mail, 
-  Droplet, 
-  ChevronDown, 
+import {
+  Info,
+  User,
+  Mail,
+  Droplet,
+  ChevronDown,
   CalendarDays,
   Building2,
   MapPin,
@@ -12,11 +13,35 @@ import {
   Clock,
   MessageSquare
 } from 'lucide-react';
+import { Button, Card, Input, Label, ListBox, Select, TextArea } from '@heroui/react';
 
 const NewDonationRequest = () => {
+  const handleRequestCreation = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const userData = { ...data, donationStatus: "pending", donorName: null, donorEmail: null }
+    console.log(userData);
+
+    await fetch(`http://localhost:8000/donationrequests`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userData),
+    });
+
+  }
+
+  // Common label styling to match your design
+  const labelStyles = "font-extrabold text-slate-400 uppercase tracking-widest text-[0.65rem] mb-1.5 block";
+
+  const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
+  const districts = ["Dhaka", "Chattogram", "Khulna", "Sylhet", "Rajshahi", "Barishal", "Rangpur", "Mymensingh"];
+  const upazilas = ["Upazila 1", "Upazila 2", "Upazila 3"];
+
   return (
-    <div className="w-full max-w-[1000px] mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
-      
+    <div className="w-full max-w-250 mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
+
       {/* Header Section */}
       <div className="mb-10">
         <h1 className="text-[2.75rem] font-black tracking-tight leading-tight mb-2">
@@ -28,222 +53,250 @@ const NewDonationRequest = () => {
         </p>
       </div>
 
-      <div className="space-y-6">
-        
+      <form onSubmit={handleRequestCreation} className="space-y-6">
+
         {/* Section 1: Requester Info */}
-        <div className="bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_2px_15px_rgb(0,0,0,0.02)]">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
-              <Info className="w-5 h-5" strokeWidth={2.5} />
-            </div>
-            <h2 className="text-[1.35rem] font-black text-slate-900">Requester Info</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Your Name */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                Your Name
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <User className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
-                </div>
-                <input 
-                  type="text" 
-                  value="Md Nazmus Shakib" 
-                  readOnly
-                  className="w-full bg-[#f8f9fa] border-transparent rounded-xl py-3.5 pl-11 pr-4 text-[0.95rem] font-bold text-slate-600 focus:outline-none"
-                />
+        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+          <Card.Content className="p-8">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
+                <Info className="w-5 h-5" strokeWidth={2.5} />
               </div>
+              <h2 className="text-[1.35rem] font-black text-slate-900">Requester Info</h2>
             </div>
 
-            {/* Your Email */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                Your Email
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Your Name</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <User className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  </div>
+                  <Input
+                    required
+                    readOnly
+                    type="text"
+                    name="requesterName"
+                    defaultValue="Md Nazmus Shakib"
+                    className="pl-11 rounded-xl bg-[#f8f9fa] border-none shadow-none text-slate-600 font-bold"
+                  />
                 </div>
-                <input 
-                  type="email" 
-                  value="shakibn2004@gmail.com" 
-                  readOnly
-                  className="w-full bg-[#f8f9fa] border-transparent rounded-xl py-3.5 pl-11 pr-4 text-[0.95rem] font-bold text-slate-600 focus:outline-none"
-                />
+              </div>
+
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Your Email</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <Mail className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  </div>
+                  <Input
+                    required
+                    readOnly
+                    type="email"
+                    name="requesterEmail"
+                    defaultValue="shakibn2004@gmail.com"
+                    className="pl-11 rounded-xl bg-[#f8f9fa] border-none shadow-none text-slate-600 font-bold"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </Card.Content>
+        </Card>
 
         {/* Section 2: Patient Details */}
-        <div className="bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_2px_15px_rgb(0,0,0,0.02)]">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
-              <Droplet className="w-5 h-5" strokeWidth={2.5} />
-            </div>
-            <h2 className="text-[1.35rem] font-black text-slate-900">Patient Details</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Recipient Name */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                Recipient Name
-              </label>
-              <input 
-                type="text" 
-                placeholder="Enter full name" 
-                className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors"
-              />
-            </div>
-
-            {/* Blood Group Needed */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                Blood Group Needed
-              </label>
-              <div className="relative">
-                <select className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-[#ed2547] appearance-none focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors cursor-pointer">
-                  <option value="" disabled selected className="text-[#ed2547]">Select Group</option>
-                  <option value="A+" className="text-slate-800">A+</option>
-                  <option value="A-" className="text-slate-800">A-</option>
-                  <option value="B+" className="text-slate-800">B+</option>
-                  <option value="B-" className="text-slate-800">B-</option>
-                  <option value="O+" className="text-slate-800">O+</option>
-                  <option value="O-" className="text-slate-800">O-</option>
-                  <option value="AB+" className="text-slate-800">AB+</option>
-                  <option value="AB-" className="text-slate-800">AB-</option>
-                </select>
-                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                  <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
-                </div>
+        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+          <Card.Content className="p-8">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
+                <Droplet className="w-5 h-5" strokeWidth={2.5} />
               </div>
+              <h2 className="text-[1.35rem] font-black text-slate-900">Patient Details</h2>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* District */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                District
-              </label>
-              <div className="relative">
-                <select className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 appearance-none focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors cursor-pointer">
-                  <option value="" disabled selected className="text-slate-800">Select District</option>
-                  {/* Options would go here */}
-                </select>
-                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                  <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Recipient Name</Label>
+                <Input
+                  required
+                  type="text"
+                  name="recipientName"
+                  placeholder="Enter full name"
+                  className="rounded-xl border border-gray-200 shadow-none focus-within:border-red-300"
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Blood Group Needed</Label>
+                <Select name="bloodGroup" required>
+                  <Select.Trigger className="rounded-xl border border-gray-200 bg-white h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                    <Select.Value placeholder="Select Group" className="text-[#ed2547] font-bold" />
+                    <Select.Indicator>
+                      <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                    </Select.Indicator>
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {bloodGroups.map((bg) => (
+                        <ListBox.Item key={bg} id={bg} textValue={bg}>
+                          {bg}
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
               </div>
             </div>
 
-            {/* Upazila */}
-            <div className="flex flex-col gap-2">
-              <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                Upazila
-              </label>
-              <div className="relative">
-                <select className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 appearance-none focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors cursor-pointer">
-                  <option value="" disabled selected className="text-slate-800">Select Upazila</option>
-                  {/* Options would go here */}
-                </select>
-                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                  <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col">
+                <Label className={labelStyles}>District</Label>
+                <Select name="recipientDistrict" required>
+                  <Select.Trigger className="rounded-xl border border-gray-200 bg-white h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                    <Select.Value placeholder="Select District" />
+                    <Select.Indicator>
+                      <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                    </Select.Indicator>
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {districts.map((district) => (
+                        <ListBox.Item key={district} id={district} textValue={district}>
+                          {district}
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
+              </div>
+
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Upazila</Label>
+                <Select name="recipientUpazila" required>
+                  <Select.Trigger className="rounded-xl border border-gray-200 bg-white h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                    <Select.Value placeholder="Select Upazila" />
+                    <Select.Indicator>
+                      <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                    </Select.Indicator>
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {upazilas.map((upazila) => (
+                        <ListBox.Item key={upazila} id={upazila} textValue={upazila}>
+                          {upazila}
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
               </div>
             </div>
-          </div>
-        </div>
+          </Card.Content>
+        </Card>
 
         {/* Section 3: Hospital & Timing */}
-        <div className="bg-white border border-gray-200 rounded-[2rem] p-8 shadow-[0_2px_15px_rgb(0,0,0,0.02)]">
-          <div className="flex items-center gap-4 mb-8">
-            <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
-              <CalendarDays className="w-5 h-5" strokeWidth={2.5} />
-            </div>
-            <h2 className="text-[1.35rem] font-black text-slate-900">Hospital & Timing</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Hospital Name */}
-            <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-1.5 text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                <Building2 className="w-3.5 h-3.5" strokeWidth={2.5} />
-                Hospital Name
-              </label>
-              <input 
-                type="text" 
-                placeholder="Enter hospital name" 
-                className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors"
-              />
+        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+          <Card.Content className="p-8">
+            <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
+                <CalendarDays className="w-5 h-5" strokeWidth={2.5} />
+              </div>
+              <h2 className="text-[1.35rem] font-black text-slate-900">Hospital & Timing</h2>
             </div>
 
-            {/* Full Address */}
-            <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-1.5 text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                <MapPin className="w-3.5 h-3.5" strokeWidth={2.5} />
-                Full Address
-              </label>
-              <input 
-                type="text" 
-                placeholder="Street / Ward / Area" 
-                className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors"
-              />
-            </div>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Hospital Name</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <Building2 className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  </div>
+                  <Input
+                    required
+                    type="text"
+                    name="hospitalName"
+                    placeholder="Enter hospital name"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300"
+                  />
+                </div>
+              </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            {/* Required Date */}
-            <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-1.5 text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                <Calendar className="w-3.5 h-3.5" strokeWidth={2.5} />
-                Required Date
-              </label>
-              <input 
-                type="date" 
-                className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors [&::-webkit-calendar-picker-indicator]:opacity-50"
-              />
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Full Address</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <MapPin className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  </div>
+                  <Input
+                    required
+                    type="text"
+                    name="fullAddress"
+                    placeholder="Street / Ward / Area"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Required Time */}
-            <div className="flex flex-col gap-2">
-              <label className="flex items-center gap-1.5 text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-                <Clock className="w-3.5 h-3.5" strokeWidth={2.5} />
-                Required Time
-              </label>
-              <input 
-                type="time" 
-                className="w-full bg-white border border-gray-100 rounded-xl px-4 py-3.5 text-[0.95rem] font-bold text-slate-800 focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors [&::-webkit-calendar-picker-indicator]:opacity-50"
-              />
-            </div>
-          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Required Date</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <Calendar className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  </div>
+                  <Input
+                    required
+                    type="date"
+                    name="donationDate"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300 [&::-webkit-calendar-picker-indicator]:opacity-50"
+                  />
+                </div>
+              </div>
 
-          {/* Request Message */}
-          <div className="flex flex-col gap-2">
-            <label className="flex items-center gap-1.5 text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
-              <MessageSquare className="w-3.5 h-3.5" strokeWidth={2.5} />
-              Request Message
-            </label>
-            <textarea 
-              rows="4" 
-              placeholder="Explain why the blood is needed..." 
-              className="w-full bg-white border border-gray-100 rounded-xl px-4 py-4 text-[0.95rem] font-bold text-slate-800 placeholder:text-slate-400 placeholder:font-semibold focus:outline-none focus:border-red-300 focus:ring-1 focus:ring-red-300 transition-colors resize-y"
-            ></textarea>
-          </div>
-        </div>
+              <div className="flex flex-col">
+                <Label className={labelStyles}>Required Time</Label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                    <Clock className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  </div>
+                  <Input
+                    required
+                    type="time"
+                    name="donationTime"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300 [&::-webkit-calendar-picker-indicator]:opacity-50"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <Label className={labelStyles}>Request Message</Label>
+              <div className="relative">
+                <div className="absolute top-4 left-0 pl-4 flex items-start pointer-events-none z-10">
+                  <MessageSquare className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                </div>
+                <TextArea
+                  required
+                  name="requestMessage"
+                  placeholder="Explain why the blood is needed..."
+                  className="pl-11 min-h-[100px] rounded-xl border border-gray-200 shadow-none py-3 focus-within:border-red-300 resize-y"
+                />
+              </div>
+            </div>
+          </Card.Content>
+        </Card>
 
         {/* Submit Button Section */}
         <div className="flex justify-end pt-4">
-          <button className="bg-[#ed2547] text-white font-bold text-[1.05rem] px-8 py-4 rounded-xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:bg-[#d91e3c] hover:shadow-lg transition-all active:scale-95 transform duration-150">
+          <Button
+            type="submit"
+            className="bg-[#ed2547] text-white font-bold text-[1.05rem] px-8 py-6 rounded-xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:scale-[0.98] transition-transform"
+          >
             Create Donation Request
-          </button>
+          </Button>
         </div>
 
-      </div>
+      </form>
     </div>
   );
 };
