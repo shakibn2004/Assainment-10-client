@@ -1,5 +1,5 @@
 'use client'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Info,
   User,
@@ -14,8 +14,20 @@ import {
   MessageSquare
 } from 'lucide-react';
 import { Button, Card, Input, Label, ListBox, Select, TextArea } from '@heroui/react';
+import { authClient } from '@/lib/auth-client';
+import { data } from 'framer-motion/client';
 
 const NewDonationRequest = () => {
+  const [district, setDistrict] = useState('');
+  const [districts, setDistricts] = useState([]);
+  const [upazilas, setUpazilas] = useState([]);
+
+  const {
+    data: session,
+    isPending,
+    error
+  } = authClient.useSession();
+
   const handleRequestCreation = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -29,23 +41,35 @@ const NewDonationRequest = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
-
   }
+
+  useEffect(() => {
+    const handleFetch = async () => {
+      const districtsPromised = await fetch('http://localhost:8000/bddistricts');
+      const districts = await districtsPromised.json();
+      setDistricts(districts);
+      const districtPromised = await fetch(`http://localhost:8000/bddistricts/${district}`);
+      const districtData = await districtPromised.json();
+      const upazilasPromised = await fetch(`http://localhost:8000/bdupazilas/${districtData.id}`);
+      const upazilas = await upazilasPromised.json();
+      setUpazilas(upazilas);
+    }
+
+    handleFetch();
+  }, [district])
 
   // Common label styling to match your design
   const labelStyles = "font-extrabold text-slate-400 uppercase tracking-widest text-[0.65rem] mb-1.5 block";
 
   const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
-  const districts = ["Dhaka", "Chattogram", "Khulna", "Sylhet", "Rajshahi", "Barishal", "Rangpur", "Mymensingh"];
-  const upazilas = ["Upazila 1", "Upazila 2", "Upazila 3"];
 
   return (
-    <div className="w-full max-w-250 mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
+    <div className="w-full max-w-250 mx-auto p-8 font-sans  min-h-screen">
 
       {/* Header Section */}
       <div className="mb-10">
         <h1 className="text-[2.75rem] font-black tracking-tight leading-tight mb-2">
-          <span className="text-slate-900">New </span>
+          <span className="text-white">New </span>
           <span className="text-[#ed2547]">Donation Request</span>
         </h1>
         <p className="text-slate-500 font-medium text-[1.05rem]">
@@ -56,13 +80,13 @@ const NewDonationRequest = () => {
       <form onSubmit={handleRequestCreation} className="space-y-6">
 
         {/* Section 1: Requester Info */}
-        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+        <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
           <Card.Content className="p-8">
             <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
+              <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
                 <Info className="w-5 h-5" strokeWidth={2.5} />
               </div>
-              <h2 className="text-[1.35rem] font-black text-slate-900">Requester Info</h2>
+              <h2 className="text-[1.35rem] font-black text-white">Requester Info</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -77,8 +101,8 @@ const NewDonationRequest = () => {
                     readOnly
                     type="text"
                     name="requesterName"
-                    defaultValue="Md Nazmus Shakib"
-                    className="pl-11 rounded-xl bg-[#f8f9fa] border-none shadow-none text-slate-600 font-bold"
+                    defaultValue={session?.user?.name}
+                    className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
                   />
                 </div>
               </div>
@@ -94,8 +118,8 @@ const NewDonationRequest = () => {
                     readOnly
                     type="email"
                     name="requesterEmail"
-                    defaultValue="shakibn2004@gmail.com"
-                    className="pl-11 rounded-xl bg-[#f8f9fa] border-none shadow-none text-slate-600 font-bold"
+                    defaultValue={session?.user?.email}
+                    className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
                   />
                 </div>
               </div>
@@ -104,13 +128,13 @@ const NewDonationRequest = () => {
         </Card>
 
         {/* Section 2: Patient Details */}
-        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] bg-black rounded-[2rem]">
           <Card.Content className="p-8">
             <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
+              <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
                 <Droplet className="w-5 h-5" strokeWidth={2.5} />
               </div>
-              <h2 className="text-[1.35rem] font-black text-slate-900">Patient Details</h2>
+              <h2 className="text-[1.35rem] font-black text-white">Patient Details</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -121,14 +145,14 @@ const NewDonationRequest = () => {
                   type="text"
                   name="recipientName"
                   placeholder="Enter full name"
-                  className="rounded-xl border border-gray-200 shadow-none focus-within:border-red-300"
+                  className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 text-white shadow-none focus-visible:outline-none"
                 />
               </div>
 
               <div className="flex flex-col">
                 <Label className={labelStyles}>Blood Group Needed</Label>
                 <Select name="bloodGroup" required>
-                  <Select.Trigger className="rounded-xl border border-gray-200 bg-white h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                  <Select.Trigger className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
                     <Select.Value placeholder="Select Group" className="text-[#ed2547] font-bold" />
                     <Select.Indicator>
                       <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
@@ -150,18 +174,19 @@ const NewDonationRequest = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="flex flex-col">
                 <Label className={labelStyles}>District</Label>
-                <Select name="recipientDistrict" required>
-                  <Select.Trigger className="rounded-xl border border-gray-200 bg-white h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                <Select onChange={(value) => { setDistrict(value) }}
+                  name="recipientDistrict" required>
+                  <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
                     <Select.Value placeholder="Select District" />
                     <Select.Indicator>
-                      <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                      <ChevronDown className="w-4 h-4" strokeWidth={2} />
                     </Select.Indicator>
                   </Select.Trigger>
                   <Select.Popover>
                     <ListBox>
                       {districts.map((district) => (
-                        <ListBox.Item key={district} id={district} textValue={district}>
-                          {district}
+                        <ListBox.Item key={district.id} id={district.name} textValue={district.name}>
+                          {district.name}
                         </ListBox.Item>
                       ))}
                     </ListBox>
@@ -172,7 +197,7 @@ const NewDonationRequest = () => {
               <div className="flex flex-col">
                 <Label className={labelStyles}>Upazila</Label>
                 <Select name="recipientUpazila" required>
-                  <Select.Trigger className="rounded-xl border border-gray-200 bg-white h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                  <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
                     <Select.Value placeholder="Select Upazila" />
                     <Select.Indicator>
                       <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
@@ -181,8 +206,8 @@ const NewDonationRequest = () => {
                   <Select.Popover>
                     <ListBox>
                       {upazilas.map((upazila) => (
-                        <ListBox.Item key={upazila} id={upazila} textValue={upazila}>
-                          {upazila}
+                        <ListBox.Item key={upazila.id} id={upazila.id} textValue={upazila.name}>
+                          {upazila.name}
                         </ListBox.Item>
                       ))}
                     </ListBox>
@@ -194,13 +219,13 @@ const NewDonationRequest = () => {
         </Card>
 
         {/* Section 3: Hospital & Timing */}
-        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+        <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
           <Card.Content className="p-8">
             <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center justify-center w-10 h-10 bg-[#fdf2f3] text-[#ed2547] rounded-full">
+              <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
                 <CalendarDays className="w-5 h-5" strokeWidth={2.5} />
               </div>
-              <h2 className="text-[1.35rem] font-black text-slate-900">Hospital & Timing</h2>
+              <h2 className="text-[1.35rem] font-black text-white">Hospital & Timing</h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -215,7 +240,7 @@ const NewDonationRequest = () => {
                     type="text"
                     name="hospitalName"
                     placeholder="Enter hospital name"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
                   />
                 </div>
               </div>
@@ -231,7 +256,7 @@ const NewDonationRequest = () => {
                     type="text"
                     name="fullAddress"
                     placeholder="Street / Ward / Area"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
                   />
                 </div>
               </div>
@@ -248,7 +273,7 @@ const NewDonationRequest = () => {
                     required
                     type="date"
                     name="donationDate"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300 [&::-webkit-calendar-picker-indicator]:opacity-50"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
                   />
                 </div>
               </div>
@@ -263,7 +288,7 @@ const NewDonationRequest = () => {
                     required
                     type="time"
                     name="donationTime"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none focus-within:border-red-300 [&::-webkit-calendar-picker-indicator]:opacity-50"
+                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
                   />
                 </div>
               </div>
@@ -279,7 +304,7 @@ const NewDonationRequest = () => {
                   required
                   name="requestMessage"
                   placeholder="Explain why the blood is needed..."
-                  className="pl-11 min-h-[100px] rounded-xl border border-gray-200 shadow-none py-3 focus-within:border-red-300 resize-y"
+                  className="pl-11 min-h-25 w-full rounded-xl border border-gray-200 shadow-none py-3 text-white bg-[#f8f9fa]/20 resize-y"
                 />
               </div>
             </div>

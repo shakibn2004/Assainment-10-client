@@ -15,7 +15,6 @@ const Registration = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
   const [district, setDistrict] = useState('');
-  const [upazila, setUpazila] = useState('');
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
   const [uploadedImageUrl, setUploadedImageUrl] = useState('');

@@ -80,7 +80,7 @@ const DashboardSidebar = () => {
                     </h3>
                     <nav className="flex flex-col gap-2">
                         <Link
-                            href="/dashboard/my-donation-requests"
+                            href={`/dashboard/my-donation-requests?email=${session?.user?.email}`}
                             className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard/my-donation-requests" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} text-slate-500 rounded-2xl transition-colors`}
                         >
                             <Droplet className="w-[1.35rem] h-[1.35rem]" strokeWidth={2} />
