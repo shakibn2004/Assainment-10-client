@@ -93,7 +93,7 @@ const DonationDashboard = () => {
                   {/* ID */}
                   <td className="px-10 py-6">
                     <span className="text-3xl font-extrabold text-gray-300 tracking-tighter">
-                      {row._id?.split('')[0] || (index + 1)}
+                      {(index + 1)}
                     </span>
                   </td>
 
@@ -156,7 +156,7 @@ const DonationDashboard = () => {
 
                         <button className="w-full px-5 py-3.5 text-left flex items-center gap-3.5 hover:bg-gray-50 transition-colors group/btn">
                           <Edit2 className="w-5 h-5 text-orange-500 group-hover/btn:text-orange-600 stroke-[2.5]" />
-                          <span className="font-bold text-gray-800 text-[15px]">Edit Request</span>
+                          <Link href={`/dashboard/editrequest/${row._id}`} className="font-bold text-gray-800 text-[15px]">Edit Request</Link>
                         </button>
                       </div>
                     )}

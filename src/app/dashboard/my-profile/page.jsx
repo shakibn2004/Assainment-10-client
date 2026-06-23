@@ -42,8 +42,8 @@ const ProfileSettings = (req) => {
     }, [session]);
 
     const handleButton = () => {
+        setEditProfile(pre => !pre)
         if (!editProfile) {
-            setEditProfile(true);
         } else {
             formRef.current.requestSubmit();
         }

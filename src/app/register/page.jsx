@@ -7,7 +7,6 @@ import {
 } from "@heroui/react";
 import { authClient } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
-import { image } from 'framer-motion/client';
 
 const Registration = () => {
   const [selectedBloodGroup, setSelectedBloodGroup] = useState('');
