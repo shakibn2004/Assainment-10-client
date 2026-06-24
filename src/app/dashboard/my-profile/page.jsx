@@ -43,22 +43,30 @@ const ProfileSettings = (req) => {
 
     const handleButton = () => {
         setEditProfile(pre => !pre)
-        if (!editProfile) {
-        } else {
-            formRef.current.requestSubmit();
-        }
     };
 
-    const handleEdit = (e) => {
+    const handleEdit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
-        const userData = Object.fromEntries(formData.entries());
-        console.log('ddd');
+        const userDataEdit = Object.fromEntries(formData.entries());
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${userData._id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userDataEdit)
+        });
+
+        const responseUser = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/user/${session?.user?.id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({name: userDataEdit.name})
+        });
     }
 
+
     return (
-        <div className="flex-1 overflow-auto w-full max-w-5xl mx-auto p-8 font-sans bg-black min-h-screen">
+        <form onSubmit={handleEdit} className="flex-1 overflow-auto w-full max-w-5xl mx-auto p-8 font-sans bg-black min-h-screen">
 
             {/* Header Section */}
             <div className="flex justify-between items-center mb-8">
@@ -135,7 +143,7 @@ const ProfileSettings = (req) => {
                 </div>
 
                 {/* Form Details Grid */}
-                <form ref={formRef} onSubmit={handleEdit} className="px-10 pt-12 pb-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
+                <div className="px-10 pt-12 pb-14 grid grid-cols-1 lg:grid-cols-3 gap-10">
 
                     {/* Left Column (Forms) */}
                     <div className="col-span-2 space-y-10">
@@ -154,7 +162,7 @@ const ProfileSettings = (req) => {
                                     <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
                                         Full Name
                                     </label>
-                                    <input defaultValue={userData.name} readOnly={!editProfile} className="bg-[#f8f9fa]/20 focus:outline-1 outline-red-600 px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-white" />
+                                    <input defaultValue={userData.name} name='name' readOnly={!editProfile} className="bg-[#f8f9fa]/20 focus:outline-1 outline-red-600 px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-white" />
 
 
                                 </div>
@@ -185,7 +193,7 @@ const ProfileSettings = (req) => {
                                     <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
                                         District
                                     </label>
-                                    <input defaultValue={userData.district} readOnly={!editProfile} className="bg-[#f8f9fa]/20 focus:outline-1 outline-red-600  px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-white" />
+                                    <input defaultValue={userData.district} name='district' readOnly={!editProfile} className="bg-[#f8f9fa]/20 focus:outline-1 outline-red-600  px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-white" />
 
                                 </div>
 
@@ -193,7 +201,7 @@ const ProfileSettings = (req) => {
                                     <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
                                         Upazila
                                     </label>
-                                    <input defaultValue={userData.upazila} readOnly={!editProfile} className="bg-[#f8f9fa]/20 focus:outline-1 outline-red-600 px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-white" />
+                                    <input defaultValue={userData.upazila} name='upazila' readOnly={!editProfile} className="bg-[#f8f9fa]/20 focus:outline-1 outline-red-600 px-4 py-3.5 rounded-xl text-[0.95rem] font-bold text-white" />
                                 </div>
                             </div>
                         </section>
@@ -218,7 +226,7 @@ const ProfileSettings = (req) => {
                                 <label className="text-[0.65rem] font-extrabold text-slate-400 uppercase tracking-widest px-1">
                                     Blood Group
                                 </label>
-                                <input defaultValue={userData.bloodGroup} readOnly={!editProfile} className="focus:outline-1 outline-red-600 px-5 py-4 rounded-2xl bg-white/20 text-xl font-black text-[#ed2547]" />
+                                <input defaultValue={userData.bloodGroup} name='bloodGroup' readOnly={!editProfile} className="focus:outline-1 outline-red-600 px-5 py-4 rounded-2xl bg-white/20 text-xl font-black text-[#ed2547]" />
                             </div>
 
                             {/* Eligibility Card */}
@@ -234,9 +242,9 @@ const ProfileSettings = (req) => {
                         </div>
                     </div>
 
-                </form>
+                </div>
             </div>
-        </div >
+        </form >
     );
 };
 
