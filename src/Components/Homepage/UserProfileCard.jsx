@@ -11,7 +11,7 @@ const UserProfileCard = ({ session, setUser, prCard }) => {
         await authClient.signOut({
             fetchOptions: {
                 onSuccess: () => {
-                    router.push("/"); // redirect to login page
+                    router.push("/login"); // redirect to login page
                 },
             },
         });

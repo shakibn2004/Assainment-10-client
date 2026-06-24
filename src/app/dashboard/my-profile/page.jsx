@@ -60,8 +60,11 @@ const ProfileSettings = (req) => {
         const responseUser = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/user/${session?.user?.id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({name: userDataEdit.name})
+            body: JSON.stringify({ name: userDataEdit.name })
         });
+
+
+
     }
 
 
@@ -119,9 +122,11 @@ const ProfileSettings = (req) => {
                                 <h2 className="text-[2rem] font-black text-white leading-none">
                                     {userData.name}
                                 </h2>
-                                <span className="flex items-center gap-1.5 px-3 py-1 bg-[#e8f5ed] text-[#129148] text-[0.65rem] font-extrabold uppercase tracking-wide rounded-full border border-green-100">
+                                <span className={`flex items-center gap-1.5 px-3 py-1 ${userData.status === 'block' ? 'bg-red-300 text-red-500' : 'bg-[#e8f5ed] text-[#129148]'}  text-[0.65rem] font-extrabold uppercase tracking-wide rounded-full border border-green-100`}>
                                     <CheckCircle2 className="w-3.5 h-3.5" strokeWidth={3} />
-                                    Active Donor
+                                    {
+                                        userData.status === 'block' ? 'Blocked' : 'Active Donor'
+                                    }
                                 </span>
                             </div>
                             <div className="flex items-center gap-1.5 mt-2.5 text-slate-500 font-semibold text-[0.95rem]">
