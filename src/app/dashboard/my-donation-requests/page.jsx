@@ -126,8 +126,8 @@ const DonationDashboard = () => {
 
                   {/* Status */}
                   <td className="px-10 py-6">
-                    <span className="inline-flex items-center gap-2.5 px-4 py-2 bg-[#fff7ee] border border-orange-100 text-orange-600 text-[13px] font-bold uppercase rounded-full tracking-wide">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                    <span className={`inline-flex items-center gap-2.5 px-4 py-2 ${row.donationStatus === 'done' ? 'text-green-500' : 'text-orange-600'}  border border-orange-100 text-[13px] font-bold uppercase rounded-full tracking-wide`}>
+                      <span className={`${row.donationStatus === 'done' ? 'bg-green-500' : 'bg-orange-500'} w-1.5 h-1.5 rounded-full`}></span>
                       {row.donationStatus}
                     </span>
                   </td>

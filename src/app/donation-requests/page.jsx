@@ -30,8 +30,8 @@ const DonationRequests = async () => {
             >
               {/* Card Top Banner */}
               <div className="bg-[#fff7ed] h-[100px] rounded-t-[2rem] p-6">
-                <div className="flex items-center gap-2 text-[#ff5722] text-[10px] font-black tracking-widest uppercase">
-                  <div className="w-2 h-2 rounded-full bg-[#ff5722]"></div>
+                <div className={`${request.donationStatus === 'done' ? 'text-green-500' : 'text-[#ff5722]'} flex items-center gap-2 text-[10px] font-black tracking-widest uppercase`}>
+                  <div className={`${request.donationStatus === 'done' ? 'bg-green-500' : 'bg-[#ff5722]'} w-2 h-2 rounded-full`}></div>
                   {request.donationStatus}
                 </div>
               </div>
