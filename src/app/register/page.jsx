@@ -22,12 +22,12 @@ const Registration = () => {
   // Sample data for the dropdowns
   useEffect(() => {
     const handleFetch = async () => {
-      const districtsPromised = await fetch('http://localhost:8000/bddistricts');
+      const districtsPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/bddistricts`);
       const districts = await districtsPromised.json();
       setDistricts(districts);
-      const districtPromised = await fetch(`http://localhost:8000/bddistricts/${district}`);
+      const districtPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/bddistricts/${district}`);
       const districtData = await districtPromised.json();
-      const upazilasPromised = await fetch(`http://localhost:8000/bdupazilas/${districtData.id}`);
+      const upazilasPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/bdupazilas/${districtData.id}`);
       const upazilas = await upazilasPromised.json();
       setUpazilas(upazilas);
     }
@@ -93,7 +93,7 @@ const Registration = () => {
       image: uploadedImageUrl
     };
 
-    await fetch(`http://localhost:8000/allusers`, {
+    await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(dbUserData),

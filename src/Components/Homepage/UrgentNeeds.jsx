@@ -30,7 +30,7 @@ const UrgentNeeds = () => {
   ];
 
   return (
-    <section className="py-20 bg-[#fafafa]">
+    <section className="py-20 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Section */}
@@ -43,7 +43,7 @@ const UrgentNeeds = () => {
             </div>
             
             {/* Main Title */}
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 leading-none mb-4">
+            <h2 className="text-5xl md:text-6xl font-black tracking-tight text-white leading-none mb-4">
               Heroes Needed <br />
               <span className="text-[#e11d48]">Immediately</span>
             </h2>
@@ -59,7 +59,7 @@ const UrgentNeeds = () => {
           <div className="shrink-0">
             <a 
               href="#" 
-              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-900 border-b-2 border-slate-900 pb-1 hover:text-[#e11d48] hover:border-[#e11d48] transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-white border-b-2 border-slate-900 pb-1 hover:text-[#e11d48] hover:border-[#e11d48] transition-colors"
             >
               View All Requests
               <ArrowRight className="w-4 h-4" />
@@ -72,41 +72,41 @@ const UrgentNeeds = () => {
           {requests.map((request) => (
             <div 
               key={request.id} 
-              className="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+              className="bg-white/40 rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
             >
               {/* Card Header: Blood Group & Urgent Badge */}
               <div className="flex justify-between items-start mb-6">
-                <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-2xl font-black text-[#e11d48]">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center text-2xl font-black text-[#e11d48]">
                   {request.bloodGroup}
                 </div>
-                <div className="bg-orange-50 text-orange-600 text-[10px] font-bold uppercase px-3 py-1.5 rounded-full tracking-wider">
+                <div className="bg-white/20 text-orange-600 text-[10px] font-bold uppercase px-3 py-1.5 rounded-full tracking-wider">
                   Urgent
                 </div>
               </div>
 
               {/* Patient Name */}
-              <h3 className="text-2xl font-bold text-slate-900 mb-6">
+              <h3 className="text-2xl font-bold text-whi mb-6">
                 For {request.patientName}
               </h3>
 
               {/* Request Details */}
               <div className="space-y-4 mb-8">
-                <div className="flex items-center gap-3 text-slate-600 font-medium">
+                <div className="flex items-center gap-3 text-white font-medium">
                   <MapPin className="w-5 h-5 text-red-500 shrink-0" />
                   <span className="text-sm">{request.location}</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-600 font-medium">
+                <div className="flex items-center gap-3 text-white font-medium">
                   <Calendar className="w-5 h-5 text-red-500 shrink-0" />
                   <span className="text-sm">{request.date}</span>
                 </div>
-                <div className="flex items-center gap-3 text-slate-600 font-medium">
+                <div className="flex items-center gap-3 text-white font-medium">
                   <Clock className="w-5 h-5 text-red-500 shrink-0" />
                   <span className="text-sm">{request.time}</span>
                 </div>
               </div>
 
               {/* Donate Button */}
-              <button className="w-full bg-slate-50 hover:bg-slate-100 text-slate-900 font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors">
+              <button className="w-full bg-white/20 hover:bg-slate-100 text-slate-900 font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors">
                 Donate Now
                 <Droplet className="w-5 h-5" />
               </button>

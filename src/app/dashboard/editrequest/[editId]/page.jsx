@@ -8,7 +8,7 @@ const EditRequest = ({ params }) => {
 
     useEffect(() => {
         const dataLoad = async () => {
-            const singleDataPromised = await fetch(`http://localhost:8000/donationrequests/${id}`)
+            const singleDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${id}`)
             const singleData = await singleDataPromised.json();
             setData(singleData);
 
@@ -21,7 +21,7 @@ const EditRequest = ({ params }) => {
         const formData = new FormData(e.currentTarget);
         const userData = Object.fromEntries(formData.entries());
 
-        const response = await fetch(`http://localhost:8000/donationrequests/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)

@@ -13,7 +13,7 @@ import Donatemodal from '@/Components/Homepage/DonateModal';
 const RequestDetails = async ({ params }) => {
     const resolvedParams = await params;
     const donerId = resolvedParams.donerId;
-    const donationPromised = await fetch(`http://localhost:8000/donationrequests/${donerId}`);
+    const donationPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${donerId}`);
     const donationDetails = await donationPromised.json();
 
     

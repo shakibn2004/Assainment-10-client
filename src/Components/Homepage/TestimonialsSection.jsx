@@ -33,13 +33,13 @@ const TestimonialsSection = () => {
   ];
 
   return (
-    <section className="bg-slate-50 py-24 px-4 sm:px-6 lg:px-8">
+    <section className="bg-black py-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
           <div className="max-w-3xl">
-            <h2 className="text-5xl md:text-6xl font-black tracking-tight text-slate-900 leading-none mb-6">
+            <h2 className="text-5xl md:text-6xl font-black tracking-tight text-white leading-none mb-6">
               Real Stories from <br />
               <span className="text-[#e11d48]">Our Community</span>
             </h2>
@@ -50,7 +50,7 @@ const TestimonialsSection = () => {
           </div>
 
           {/* Overall Rating Badge */}
-          <div className="shrink-0 bg-white shadow-xl shadow-slate-100 rounded-full py-4 px-6 flex items-center gap-3 border border-slate-100">
+          <div className="shrink-0 bg-white rounded-full py-4 px-6 flex items-center gap-3 border border-slate-100">
             <div className="flex -space-x-3">
               {[...Array(4)].map((_, i) => (
                 <img key={i} src={`https://randomuser.me/api/portraits/men/${i+40}.jpg`} alt="" className="w-9 h-9 rounded-full border-2 border-white" />
@@ -68,7 +68,7 @@ const TestimonialsSection = () => {
         {/* Testimonials Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {testimonials.map((item) => (
-            <div key={item.id} className="bg-white p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all flex flex-col relative">
+            <div key={item.id} className="bg-white/40 p-10 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all flex flex-col relative">
               
               {/* Quote Icon */}
               <Quote className="absolute top-8 left-8 w-12 h-12 text-[#e11d48]/10 fill-[#e11d48]/10" />
@@ -79,7 +79,7 @@ const TestimonialsSection = () => {
               </div>
 
               {/* Quote Text */}
-              <p className="text-slate-700 text-base leading-relaxed mb-12 flex-grow italic">
+              <p className="text-white text-base leading-relaxed mb-12 flex-grow italic">
                 “{item.quote}”
               </p>
 

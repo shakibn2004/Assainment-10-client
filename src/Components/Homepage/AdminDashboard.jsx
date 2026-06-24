@@ -11,11 +11,11 @@ const AdminDashboard = ({ session }) => {
 
     useEffect(() => {
         const dataFetch = async () => {
-            const allUserPromised = await fetch('http://localhost:8000/allusers');
+            const allUserPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers`);
             const allUserSet = await allUserPromised.json();
             setAllUsers(allUserSet);
 
-            const fundingPromised = await fetch('http://localhost:8000/funding');
+            const fundingPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding`);
             const fundingSet = await fundingPromised.json();
             setAllFunding(fundingSet);
             
@@ -24,7 +24,7 @@ const AdminDashboard = ({ session }) => {
             }, 0);
             setFunding(funding)
 
-            const bloodPromised = await fetch('http://localhost:8000/donationrequests');
+            const bloodPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
             const bloodSet = await bloodPromised.json();
             setBloodRequest(bloodSet);
         }

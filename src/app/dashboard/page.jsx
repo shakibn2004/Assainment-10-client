@@ -24,11 +24,11 @@ const DashboardWelcome = () => {
 
   useEffect(() => {
     const dataLoad = async () => {
-      const dataPromised = await fetch('http://localhost:8000/donationrequests');
+      const dataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
       const allData = await dataPromised.json();
       setData(allData);
 
-      const currentUserPromised = await fetch(`http://localhost:8000/allusers/${session?.user?.email}`);
+      const currentUserPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${session?.user?.email}`);
       const currentUser = await currentUserPromised.json();
       setUserData(currentUser);
 

@@ -27,7 +27,7 @@ const DonationDashboard = () => {
     const dataFetch = async () => {
       // Added optional chaining to prevent fetch errors if session isn't loaded yet
       if (session?.user?.email) {
-        const rqDataPromised = await fetch(`http://localhost:8000/donationrequests`)
+        const rqDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`)
         const rqData = await rqDataPromised.json();
         setData(rqData);
       }

@@ -7,7 +7,7 @@ import { stripe } from '@/lib/stripe';
 
 const FundingHistory = async ({ searchParams }) => {
     const { page } = await searchParams;
-    const fundingPromised = await fetch(`http://localhost:8000/funding?page=${page}`);
+    const fundingPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding?page=${page}`);
     const data = await fundingPromised.json();
     const fundingData = data.data;
 

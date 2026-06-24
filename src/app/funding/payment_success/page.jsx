@@ -41,7 +41,7 @@ const PaymentSuccess = async ({ searchParams }) => {
             date: formatted,
             initials: metadata.name.split(' ')[0],
         }
-        const res = await fetch(`http://localhost:8000/funding`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

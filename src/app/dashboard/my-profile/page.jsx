@@ -29,7 +29,7 @@ const ProfileSettings = (req) => {
         const loadData = async () => {
 
             const res = await fetch(
-                `http://localhost:8000/allusers/${session.user.email}`
+                `${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${session.user.email}`
             );
 
             const data = await res.json();

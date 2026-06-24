@@ -10,7 +10,7 @@ const DashboardNavbar = async () => {
         headers: await headers()
     })
 
-    const singleUserFetch = await fetch(`http://localhost:8000/allusers/${session?.user?.email}`);
+    const singleUserFetch = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${session?.user?.email}`);
     const singleUser = await singleUserFetch.json();
 
     return (

@@ -15,12 +15,13 @@ import {
 } from 'lucide-react';
 import { Button, Card, Input, Label, ListBox, Select, TextArea } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
-import { data } from 'framer-motion/client';
+import { data, div, h1 } from 'framer-motion/client';
 
 const NewDonationRequest = () => {
   const [district, setDistrict] = useState('');
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
+  const [singleUserData, setSingleUserData] = useState({});
 
   const {
     data: session,
@@ -34,9 +35,8 @@ const NewDonationRequest = () => {
     const data = Object.fromEntries(formData.entries());
 
     const userData = { ...data, donationStatus: "pending", donorName: null, donorEmail: null }
-    console.log(userData);
 
-    await fetch(`http://localhost:8000/donationrequests`, {
+    await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -45,12 +45,12 @@ const NewDonationRequest = () => {
 
   useEffect(() => {
     const handleFetch = async () => {
-      const districtsPromised = await fetch('http://localhost:8000/bddistricts');
+      const districtsPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/bddistricts`);
       const districts = await districtsPromised.json();
       setDistricts(districts);
-      const districtPromised = await fetch(`http://localhost:8000/bddistricts/${district}`);
+      const districtPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/bddistricts/${district}`);
       const districtData = await districtPromised.json();
-      const upazilasPromised = await fetch(`http://localhost:8000/bdupazilas/${districtData.id}`);
+      const upazilasPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/bdupazilas/${districtData.id}`);
       const upazilas = await upazilasPromised.json();
       setUpazilas(upazilas);
     }
@@ -58,270 +58,294 @@ const NewDonationRequest = () => {
     handleFetch();
   }, [district])
 
+  useEffect(() => {
+    const handleUser = async () => {
+      const singleUserPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${session?.user?.email}`);
+      const singleUser = await singleUserPromised.json();
+      setSingleUserData(singleUser);
+      console.log(singleUser);
+
+    }
+    handleUser()
+  }, [session])
+
   // Common label styling to match your design
   const labelStyles = "font-extrabold text-slate-400 uppercase tracking-widest text-[0.65rem] mb-1.5 block";
 
   const bloodGroups = ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-"];
 
   return (
-    <div className="w-full max-w-250 mx-auto p-8 font-sans  min-h-screen">
+    <div>
+      {
+        singleUserData.status !== 'block' ? (
+          <div className="w-full max-w-250 mx-auto p-8 font-sans  min-h-screen" >
 
-      {/* Header Section */}
-      <div className="mb-10">
-        <h1 className="text-[2.75rem] font-black tracking-tight leading-tight mb-2">
-          <span className="text-white">New </span>
-          <span className="text-[#ed2547]">Donation Request</span>
-        </h1>
-        <p className="text-slate-500 font-medium text-[1.05rem]">
-          Complete the form below to broadcast an urgent request to the donor community.
-        </p>
-      </div>
+            {/* Header Section */}
+            < div className="mb-10" >
+              <h1 className="text-[2.75rem] font-black tracking-tight leading-tight mb-2">
+                <span className="text-white">New </span>
+                <span className="text-[#ed2547]">Donation Request</span>
+              </h1>
+              <p className="text-slate-500 font-medium text-[1.05rem]">
+                Complete the form below to broadcast an urgent request to the donor community.
+              </p>
+            </div >
 
-      <form onSubmit={handleRequestCreation} className="space-y-6">
+            <form onSubmit={handleRequestCreation} className="space-y-6">
 
-        {/* Section 1: Requester Info */}
-        <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
-          <Card.Content className="p-8">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
-                <Info className="w-5 h-5" strokeWidth={2.5} />
-              </div>
-              <h2 className="text-[1.35rem] font-black text-white">Requester Info</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Your Name</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <User className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+              {/* Section 1: Requester Info */}
+              <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+                <Card.Content className="p-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
+                      <Info className="w-5 h-5" strokeWidth={2.5} />
+                    </div>
+                    <h2 className="text-[1.35rem] font-black text-white">Requester Info</h2>
                   </div>
-                  <Input
-                    required
-                    readOnly
-                    type="text"
-                    name="requesterName"
-                    defaultValue={session?.user?.name}
-                    className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
-                  />
-                </div>
-              </div>
 
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Your Email</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <Mail className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Your Name</Label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                          <User className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                        </div>
+                        <Input
+                          required
+                          readOnly
+                          type="text"
+                          name="requesterName"
+                          defaultValue={session?.user?.name}
+                          className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Your Email</Label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                          <Mail className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                        </div>
+                        <Input
+                          required
+                          readOnly
+                          type="email"
+                          name="requesterEmail"
+                          defaultValue={session?.user?.email}
+                          className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <Input
-                    required
-                    readOnly
-                    type="email"
-                    name="requesterEmail"
-                    defaultValue={session?.user?.email}
-                    className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
-                  />
-                </div>
-              </div>
-            </div>
-          </Card.Content>
-        </Card>
+                </Card.Content>
+              </Card>
 
-        {/* Section 2: Patient Details */}
-        <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] bg-black rounded-[2rem]">
-          <Card.Content className="p-8">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
-                <Droplet className="w-5 h-5" strokeWidth={2.5} />
-              </div>
-              <h2 className="text-[1.35rem] font-black text-white">Patient Details</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Recipient Name</Label>
-                <Input
-                  required
-                  type="text"
-                  name="recipientName"
-                  placeholder="Enter full name"
-                  className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 text-white shadow-none focus-visible:outline-none"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Blood Group Needed</Label>
-                <Select name="bloodGroup" required>
-                  <Select.Trigger className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
-                    <Select.Value placeholder="Select Group" className="text-[#ed2547] font-bold" />
-                    <Select.Indicator>
-                      <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
-                    </Select.Indicator>
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
-                      {bloodGroups.map((bg) => (
-                        <ListBox.Item key={bg} id={bg} textValue={bg}>
-                          {bg}
-                        </ListBox.Item>
-                      ))}
-                    </ListBox>
-                  </Select.Popover>
-                </Select>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col">
-                <Label className={labelStyles}>District</Label>
-                <Select onChange={(value) => { setDistrict(value) }}
-                  name="recipientDistrict" required>
-                  <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
-                    <Select.Value placeholder="Select District" />
-                    <Select.Indicator>
-                      <ChevronDown className="w-4 h-4" strokeWidth={2} />
-                    </Select.Indicator>
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
-                      {districts.map((district) => (
-                        <ListBox.Item key={district.id} id={district.name} textValue={district.name}>
-                          {district.name}
-                        </ListBox.Item>
-                      ))}
-                    </ListBox>
-                  </Select.Popover>
-                </Select>
-              </div>
-
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Upazila</Label>
-                <Select name="recipientUpazila" required>
-                  <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
-                    <Select.Value placeholder="Select Upazila" />
-                    <Select.Indicator>
-                      <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
-                    </Select.Indicator>
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
-                      {upazilas.map((upazila) => (
-                        <ListBox.Item key={upazila.id} id={upazila.id} textValue={upazila.name}>
-                          {upazila.name}
-                        </ListBox.Item>
-                      ))}
-                    </ListBox>
-                  </Select.Popover>
-                </Select>
-              </div>
-            </div>
-          </Card.Content>
-        </Card>
-
-        {/* Section 3: Hospital & Timing */}
-        <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
-          <Card.Content className="p-8">
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
-                <CalendarDays className="w-5 h-5" strokeWidth={2.5} />
-              </div>
-              <h2 className="text-[1.35rem] font-black text-white">Hospital & Timing</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Hospital Name</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <Building2 className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+              {/* Section 2: Patient Details */}
+              <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] bg-black rounded-[2rem]">
+                <Card.Content className="p-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
+                      <Droplet className="w-5 h-5" strokeWidth={2.5} />
+                    </div>
+                    <h2 className="text-[1.35rem] font-black text-white">Patient Details</h2>
                   </div>
-                  <Input
-                    required
-                    type="text"
-                    name="hospitalName"
-                    placeholder="Enter hospital name"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
-                  />
-                </div>
-              </div>
 
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Full Address</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <MapPin className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Recipient Name</Label>
+                      <Input
+                        required
+                        type="text"
+                        name="recipientName"
+                        placeholder="Enter full name"
+                        className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 text-white shadow-none focus-visible:outline-none"
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Blood Group Needed</Label>
+                      <Select name="bloodGroup" required>
+                        <Select.Trigger className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                          <Select.Value placeholder="Select Group" className="text-[#ed2547] font-bold" />
+                          <Select.Indicator>
+                            <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                          </Select.Indicator>
+                        </Select.Trigger>
+                        <Select.Popover>
+                          <ListBox>
+                            {bloodGroups.map((bg) => (
+                              <ListBox.Item key={bg} id={bg} textValue={bg}>
+                                {bg}
+                              </ListBox.Item>
+                            ))}
+                          </ListBox>
+                        </Select.Popover>
+                      </Select>
+                    </div>
                   </div>
-                  <Input
-                    required
-                    type="text"
-                    name="fullAddress"
-                    placeholder="Street / Ward / Area"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
-                  />
-                </div>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Required Date</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <Calendar className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>District</Label>
+                      <Select onChange={(value) => { setDistrict(value) }}
+                        name="recipientDistrict" required>
+                        <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
+                          <Select.Value placeholder="Select District" />
+                          <Select.Indicator>
+                            <ChevronDown className="w-4 h-4" strokeWidth={2} />
+                          </Select.Indicator>
+                        </Select.Trigger>
+                        <Select.Popover>
+                          <ListBox>
+                            {districts.map((district) => (
+                              <ListBox.Item key={district.id} id={district.name} textValue={district.name}>
+                                {district.name}
+                              </ListBox.Item>
+                            ))}
+                          </ListBox>
+                        </Select.Popover>
+                      </Select>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Upazila</Label>
+                      <Select name="recipientUpazila" required>
+                        <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                          <Select.Value placeholder="Select Upazila" />
+                          <Select.Indicator>
+                            <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
+                          </Select.Indicator>
+                        </Select.Trigger>
+                        <Select.Popover>
+                          <ListBox>
+                            {upazilas.map((upazila) => (
+                              <ListBox.Item key={upazila.id} id={upazila.id} textValue={upazila.name}>
+                                {upazila.name}
+                              </ListBox.Item>
+                            ))}
+                          </ListBox>
+                        </Select.Popover>
+                      </Select>
+                    </div>
                   </div>
-                  <Input
-                    required
-                    type="date"
-                    name="donationDate"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
-                  />
-                </div>
-              </div>
+                </Card.Content>
+              </Card>
 
-              <div className="flex flex-col">
-                <Label className={labelStyles}>Required Time</Label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                    <Clock className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+              {/* Section 3: Hospital & Timing */}
+              <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
+                <Card.Content className="p-8">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
+                      <CalendarDays className="w-5 h-5" strokeWidth={2.5} />
+                    </div>
+                    <h2 className="text-[1.35rem] font-black text-white">Hospital & Timing</h2>
                   </div>
-                  <Input
-                    required
-                    type="time"
-                    name="donationTime"
-                    className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
-                  />
-                </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Hospital Name</Label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                          <Building2 className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                        </div>
+                        <Input
+                          required
+                          type="text"
+                          name="hospitalName"
+                          placeholder="Enter hospital name"
+                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Full Address</Label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                          <MapPin className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                        </div>
+                        <Input
+                          required
+                          type="text"
+                          name="fullAddress"
+                          placeholder="Street / Ward / Area"
+                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Required Date</Label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                          <Calendar className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                        </div>
+                        <Input
+                          required
+                          type="date"
+                          name="donationDate"
+                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <Label className={labelStyles}>Required Time</Label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                          <Clock className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                        </div>
+                        <Input
+                          required
+                          type="time"
+                          name="donationTime"
+                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col">
+                    <Label className={labelStyles}>Request Message</Label>
+                    <div className="relative">
+                      <div className="absolute top-4 left-0 pl-4 flex items-start pointer-events-none z-10">
+                        <MessageSquare className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
+                      </div>
+                      <TextArea
+                        required
+                        name="requestMessage"
+                        placeholder="Explain why the blood is needed..."
+                        className="pl-11 min-h-25 w-full rounded-xl border border-gray-200 shadow-none py-3 text-white bg-[#f8f9fa]/20 resize-y"
+                      />
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card>
+
+              {/* Submit Button Section */}
+              <div className="flex justify-end pt-4">
+                <Button
+                  type="submit"
+                  className="bg-[#ed2547] text-white font-bold text-[1.05rem] px-8 py-6 rounded-xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:scale-[0.98] transition-transform"
+                >
+                  Create Donation Request
+                </Button>
               </div>
-            </div>
 
-            <div className="flex flex-col">
-              <Label className={labelStyles}>Request Message</Label>
-              <div className="relative">
-                <div className="absolute top-4 left-0 pl-4 flex items-start pointer-events-none z-10">
-                  <MessageSquare className="w-4 h-4 text-slate-400" strokeWidth={2.5} />
-                </div>
-                <TextArea
-                  required
-                  name="requestMessage"
-                  placeholder="Explain why the blood is needed..."
-                  className="pl-11 min-h-25 w-full rounded-xl border border-gray-200 shadow-none py-3 text-white bg-[#f8f9fa]/20 resize-y"
-                />
-              </div>
-            </div>
-          </Card.Content>
-        </Card>
+            </form>
+          </div >
 
-        {/* Submit Button Section */}
-        <div className="flex justify-end pt-4">
-          <Button
-            type="submit"
-            className="bg-[#ed2547] text-white font-bold text-[1.05rem] px-8 py-6 rounded-xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:scale-[0.98] transition-transform"
-          >
-            Create Donation Request
-          </Button>
-        </div>
+        ) : (
+          <div className='flex h-[80vh] text-center flex-col gap-2 justify-center items-center'>
+            <h1 className='text-4xl font-black text-red-500'>You are not allowed to create request!</h1>
+            <p className='text-green-500 text-2xl'>Please contact with admin</p>
 
-      </form>
+          </div >
+        )
+      }
     </div>
   );
 };

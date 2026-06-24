@@ -12,7 +12,7 @@ export default function UserManagementSection() {
     // Close dropdown when clicking outside
     useEffect(() => {
         const dataLoad = async () => {
-            const allUsersFetch = await fetch('http://localhost:8000/allusers');
+            const allUsersFetch = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers`);
             const allUsers = await allUsersFetch.json();
             setUsersData(allUsers)
 
@@ -39,7 +39,7 @@ export default function UserManagementSection() {
             status: status,
             role: role
         }
-        const response = await fetch(`http://localhost:8000/allusers/${id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)

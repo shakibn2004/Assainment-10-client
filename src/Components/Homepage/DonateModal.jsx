@@ -19,7 +19,7 @@ export default function Donatemodal({ donerId, donationStatus }) {
         const formData = new FormData(e.currentTarget);
         const userData = Object.fromEntries(formData.entries());
 
-        const response = await fetch(`http://localhost:8000/donationrequests/${donerId}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${donerId}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
@@ -27,7 +27,7 @@ export default function Donatemodal({ donerId, donationStatus }) {
 
         setIsModalOpen(false)
 
-        redirect(`http://localhost:3000/dashboard/donation-request-details/${donerId}`)
+        redirect(`${process.env.BETTER_AUTH_URL}/dashboard/donation-request-details/${donerId}`)
 
     };
 
