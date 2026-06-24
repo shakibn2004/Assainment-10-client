@@ -6,7 +6,7 @@
 
 ##  Live URL
 
-[https://blood-hope.netlify.app](https://blood-hope.netlify.app)
+[https://assainment-10-client.vercel.app/](https://assainment-10-client.vercel.app/)
 
 ---
 
