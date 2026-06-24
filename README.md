@@ -1,3 +1,4 @@
+<img width="1463" height="765" alt="Screenshot 2026-06-24 at 6 41 17 PM" src="https://github.com/user-attachments/assets/358d4e34-9619-4444-bcae-9b31f6d5e886" />
 # BloodBridge
 
 > Connecting blood donors with those in need — saving lives across Bangladesh.
