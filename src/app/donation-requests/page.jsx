@@ -29,7 +29,7 @@ const DonationRequests = async () => {
               className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-shadow duration-300 relative"
             >
               {/* Card Top Banner */}
-              <div className="bg-[#fff7ed] h-[100px] rounded-t-[2rem] p-6">
+              <div className="bg-[#fff7ed] h-25 rounded-t-[2rem] p-6">
                 <div className={`${request.donationStatus === 'done' ? 'text-green-500' : 'text-[#ff5722]'} flex items-center gap-2 text-[10px] font-black tracking-widest uppercase`}>
                   <div className={`${request.donationStatus === 'done' ? 'bg-green-500' : 'bg-[#ff5722]'} w-2 h-2 rounded-full`}></div>
                   {request.donationStatus}
@@ -37,7 +37,7 @@ const DonationRequests = async () => {
               </div>
 
               {/* Floating Blood Group Badge */}
-              <div className="absolute top-[3.5rem] left-6 w-[72px] h-[72px] bg-white rounded-2xl shadow-lg flex items-center justify-center text-[#e11d48] text-3xl font-black border border-slate-50">
+              <div className="absolute top-14 left-6 w-18 h-18 bg-white rounded-2xl shadow-lg flex items-center justify-center text-[#e11d48] text-3xl font-black border border-slate-50">
                 {request.bloodGroup}
               </div>
 
