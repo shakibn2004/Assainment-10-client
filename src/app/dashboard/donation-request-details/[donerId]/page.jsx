@@ -8,12 +8,15 @@ import {
     Calendar,
     MessageSquare
 } from 'lucide-react';
+import Donatemodal from '@/Components/Homepage/DonateModal';
 
 const RequestDetails = async ({ params }) => {
     const resolvedParams = await params;
     const donerId = resolvedParams.donerId;
     const donationPromised = await fetch(`http://localhost:8000/donationrequests/${donerId}`);
     const donationDetails = await donationPromised.json();
+
+    
     return (
         <div className="w-full max-w-250 mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
 
@@ -35,7 +38,7 @@ const RequestDetails = async ({ params }) => {
                 </p>
 
                 {/* Floating Status Badge */}
-                <div className="absolute right-0 bottom-0 flex items-center gap-1.5 px-5 py-2.5 bg-[#fcecdb] text-[#e87a2a] rounded-full text-[0.8rem] font-black uppercase tracking-widest shadow-sm">
+                <div className={`${donationDetails.donationStatus==='done'?'bg-green-200 text-green-600':'bg-[#fcecdb] text-[#e87a2a]'} absolute right-0 bottom-0 flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[0.8rem] font-black uppercase tracking-widest shadow-sm`}>
                     <Clock className="w-4 h-4" strokeWidth={3} />
                     {donationDetails.donationStatus}
                 </div>
@@ -187,9 +190,7 @@ const RequestDetails = async ({ params }) => {
 
                 {/* Action Button */}
                 <div className="flex justify-end mt-10">
-                    <button className="bg-[#ed2547] text-white font-black text-[1.1rem] px-10 py-4 rounded-2xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:bg-[#d91e3c] hover:shadow-lg transition-all active:scale-95 transform duration-150">
-                        Donate Now
-                    </button>
+                    <Donatemodal donerId={donerId} donationStatus={donationDetails.donationStatus} />
                 </div>
 
             </div>

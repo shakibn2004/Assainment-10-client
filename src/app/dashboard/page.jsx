@@ -57,7 +57,7 @@ const DashboardWelcome = () => {
           )
           : userData?.role === "volunteer"
             ? (
-              <h1>Hello Volunteer!</h1>
+              <AdminDashboard session={session} />
             )
             : (
               !data ? (
