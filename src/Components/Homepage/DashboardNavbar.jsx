@@ -1,8 +1,17 @@
+import { auth } from '@/lib/auth';
 import { Droplets } from 'lucide-react';
+import { headers } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 
 const DashboardNavbar = async () => {
+
+    const session = await auth.api.getSession({
+        headers: await headers()
+    })
+
+    const singleUserFetch = await fetch(`http://localhost:8000/allusers/${session?.user?.email}`);
+    const singleUser = await singleUserFetch.json();
 
     return (
         <header className="sticky top-0 flex px-10 w-full h-22.5 bg-black border-b border-gray-100 font-sans">
@@ -27,14 +36,31 @@ const DashboardNavbar = async () => {
                         Dashboard
                     </h1>
                     <p className="text-[0.7rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase">
-                        Welcome Back, Donor
+                        Welcome Back,
+                        {
+                            singleUser.role === 'admin' && 'ADMIN'
+                        }
+                        {
+                            singleUser.role === 'volunteer' && 'VOLUNTEER'
+                        }
+                        {
+                            singleUser.role === 'doner' && 'DONER'
+                        }
                     </p>
                 </div>
 
                 {/* User Role Indicator */}
                 <div className="flex items-center">
                     <span className="text-[#ed2547] font-black text-[1.1rem] uppercase tracking-wide">
-                        Donor
+                        {
+                            singleUser.role === 'admin' && 'ADMIN'
+                        }
+                        {
+                            singleUser.role === 'volunteer' && 'VOLUNTEER'
+                        }
+                        {
+                            singleUser.role === 'doner' && 'DONER'
+                        }
                     </span>
                 </div>
 

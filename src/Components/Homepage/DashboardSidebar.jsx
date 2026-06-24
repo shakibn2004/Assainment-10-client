@@ -1,10 +1,12 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
-import { Droplet, LayoutGrid, LogOut, Pencil, UserCircle } from 'lucide-react';
+import { Droplet, LayoutGrid, LogOut, Pencil, User, UserCircle, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { FaGalacticRepublic } from 'react-icons/fa';
+import { MdOutlinePublic, MdPublic } from 'react-icons/md';
 
 const DashboardSidebar = () => {
     const [userData, setUserData] = useState([])
@@ -31,13 +33,10 @@ const DashboardSidebar = () => {
     useEffect(() => {
         if (!session?.user?.email) return;
         const loadData = async () => {
-
-            const res = await fetch(
-                `http://localhost:8000/allusers/${session.user.email}`
-            );
-
+            const res = await fetch(`http://localhost:8000/allusers/${session.user.email}`);
             const data = await res.json();
             setUserData(data);
+            
         };
 
         loadData();
@@ -93,6 +92,29 @@ const DashboardSidebar = () => {
                         >
                             <Pencil className="w-[1.35rem] h-[1.35rem]" strokeWidth={2} />
                             <span className="font-bold text-[1.05rem]">Create Request</span>
+                        </Link>
+                    </nav>
+                </div>
+                {/* MANAGEMENT SECTION */}
+                <div className="mb-8">
+                    <h3 className="text-[0.7rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-4 px-2">
+                        Management
+                    </h3>
+                    <nav className="flex flex-col gap-2">
+                        <Link
+                            href={`/dashboard/allusers`}
+                            className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard/my-donation-requests" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} text-slate-500 rounded-2xl transition-colors`}
+                        >
+                            <Users className="w-[1.35rem] h-[1.35rem]" strokeWidth={2} />
+                            <span className="font-bold text-[1.05rem]">All Users</span>
+                        </Link>
+
+                        <Link
+                            href="/dashboard/create-donation-request"
+                            className={`flex items-center gap-4 px-4 py-3.5 ${pathName === "/dashboard/create-donation-request" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} text-slate-500 rounded-2xl transition-colors`}
+                        >
+                            <FaGalacticRepublic className='border-none'  strokeWidth={2} />
+                            <span className="font-bold text-[1.05rem]">Public Requests</span>
                         </Link>
                     </nav>
                 </div>

@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 
 const AdminDashboard = ({ session }) => {
-    
+
     const [allUsers, setAllUsers] = useState([]);
-    const [funding, setFunding] = useState([]);
+    const [allFunding, setAllFunding] = useState([]);
     const [bloodRequest, setBloodRequest] = useState([]);
-    
+    const [funding, setFunding] = useState(0)
+
     useEffect(() => {
         const dataFetch = async () => {
             const allUserPromised = await fetch('http://localhost:8000/allusers');
@@ -16,7 +17,12 @@ const AdminDashboard = ({ session }) => {
 
             const fundingPromised = await fetch('http://localhost:8000/funding');
             const fundingSet = await fundingPromised.json();
-            setFunding(fundingSet);
+            setAllFunding(fundingSet);
+            
+            const funding = fundingSet?.data?.reduce((sum, item) => {
+                return sum + Number(item.amount);
+            }, 0);
+            setFunding(funding)
 
             const bloodPromised = await fetch('http://localhost:8000/donationrequests');
             const bloodSet = await bloodPromised.json();
@@ -24,7 +30,10 @@ const AdminDashboard = ({ session }) => {
         }
         dataFetch();
     }, [])
-    
+
+
+
+
     const stats = [
         {
             title: "Total Donors",
@@ -43,7 +52,7 @@ const AdminDashboard = ({ session }) => {
         },
         {
             title: "Total Funding",
-            value: `${funding?.data?.length}`,
+            value: `$${funding}`,
             trend: "+5%",
             iconBg: "bg-[#F0FDF4]",
             iconColor: "text-[#22C55E]",

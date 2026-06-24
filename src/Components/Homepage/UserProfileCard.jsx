@@ -22,10 +22,10 @@ const UserProfileCard = ({ session, setUser, prCard }) => {
             {/* User Info Section */}
             <div className="mb-5">
                 <h2 className="text-[1.15rem] font-bold text-gray-900 leading-tight">
-                    Md Nazmus Shakib
+                    {session?.user?.name}
                 </h2>
                 <p className="text-gray-500 text-[0.9rem] mt-0.5">
-                    shakibn2004@gmail.com
+                    {session?.user?.email}
                 </p>
             </div>
 
