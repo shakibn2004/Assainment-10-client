@@ -9,6 +9,7 @@ import {
     MessageSquare
 } from 'lucide-react';
 import Donatemodal from '@/Components/Homepage/DonateModal';
+import Link from 'next/link';
 
 const RequestDetails = async ({ params }) => {
     const resolvedParams = await params;
@@ -18,11 +19,11 @@ const RequestDetails = async ({ params }) => {
 
     
     return (
-        <div className="w-full max-w-250 mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
+        <div className="w-full max-w-250 mx-auto p-8 font-sans bg-black min-h-screen">
 
             {/* Breadcrumb */}
             <div className="flex items-center gap-2 text-[0.7rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-8">
-                <a href="#" className="hover:text-slate-600 transition-colors">Home</a>
+                <Link href="/" className="hover:text-slate-600 transition-colors">Home</Link>
                 <ChevronRight className="w-3.5 h-3.5" strokeWidth={3} />
                 <span className="text-slate-900">Request ID#{donationDetails._id}</span>
             </div>
@@ -30,7 +31,7 @@ const RequestDetails = async ({ params }) => {
             {/* Header Section */}
             <div className="text-center relative mb-8">
                 <h1 className="text-[3rem] font-black tracking-tight leading-tight mb-2">
-                    <span className="text-slate-900">Request </span>
+                    <span className="text-white">Request </span>
                     <span className="text-[#ed2547]">Details</span>
                 </h1>
                 <p className="text-slate-500 font-semibold text-[1.05rem]">
@@ -45,18 +46,18 @@ const RequestDetails = async ({ params }) => {
             </div>
 
             {/* Main Details Card */}
-            <div className="bg-white rounded-[2.5rem] p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
+            <div className="bg-black rounded-[2.5rem] p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100">
 
                 {/* Top Section: User & Blood Group */}
                 <div className="flex justify-between items-center">
 
                     {/* User Info */}
                     <div className="flex items-center gap-6">
-                        <div className="w-25 h-25 bg-[#fdf2f3] rounded-4xl flex items-center justify-center shadow-inner">
+                        <div className="w-25 h-25 bg-[#fdf2f3]/30 rounded-4xl flex items-center justify-center shadow-inner">
                             <User className="w-10 h-10 text-[#ed2547]" strokeWidth={2.5} />
                         </div>
                         <div>
-                            <h2 className="text-[2rem] font-black text-slate-900 leading-none mb-1.5">
+                            <h2 className="text-[2rem] font-black text-white leading-none mb-1.5">
                                 {donationDetails.recipientName}
                             </h2>
                             <p className="text-[0.75rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase">
@@ -66,7 +67,7 @@ const RequestDetails = async ({ params }) => {
                     </div>
 
                     {/* Blood Group Badge */}
-                    <div className="flex items-center gap-4 bg-[#fdf2f3] p-4 pr-8 rounded-4xl">
+                    <div className="flex items-center gap-4 bg-white/30 p-4 pr-8 rounded-4xl">
                         <div className="w-12.5 h-12.5 bg-[#ed2547] rounded-2xl flex items-center justify-center text-white text-xl font-black shadow-md shadow-red-200">
                             {donationDetails.bloodGroup}
                         </div>
@@ -74,7 +75,7 @@ const RequestDetails = async ({ params }) => {
                             <span className="text-[0.65rem] font-black text-[#e85c6f] tracking-[0.15em] uppercase leading-tight mb-0.5">
                                 Required
                             </span>
-                            <span className="text-[1.1rem] font-black text-slate-900 leading-tight">
+                            <span className="text-[1.1rem] font-black text-white leading-tight">
                                 Blood Group
                             </span>
                         </div>
@@ -100,14 +101,14 @@ const RequestDetails = async ({ params }) => {
                         <div className="space-y-8">
                             {/* Hospital */}
                             <div className="flex items-start gap-5">
-                                <div className="w-12 h-12 rounded-full bg-[#f0f9f4] flex items-center justify-center shrink-0">
+                                <div className="w-12 h-12 rounded-full bg-[#f0f9f4]/30 flex items-center justify-center shrink-0">
                                     <Building2 className="w-5 h-5 text-[#219653]" strokeWidth={2.5} />
                                 </div>
                                 <div>
                                     <p className="text-[0.65rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-1">
                                         Hospital
                                     </p>
-                                    <p className="text-[1.1rem] font-black text-slate-900 mb-0.5 leading-tight">
+                                    <p className="text-[1.1rem] font-black text-white mb-0.5 leading-tight">
                                         {donationDetails.hospitalName}
                                     </p>
                                     <p className="text-[0.95rem] font-semibold text-slate-500">
@@ -118,14 +119,14 @@ const RequestDetails = async ({ params }) => {
 
                             {/* Full Address */}
                             <div className="flex items-start gap-5">
-                                <div className="w-12 h-12 rounded-full bg-[#fdf2f3] flex items-center justify-center shrink-0">
+                                <div className="w-12 h-12 rounded-full bg-[#fdf2f3]/30 flex items-center justify-center shrink-0">
                                     <MapPin className="w-5 h-5 text-[#ed2547]" strokeWidth={2.5} />
                                 </div>
                                 <div>
                                     <p className="text-[0.65rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-1">
                                         Full Address
                                     </p>
-                                    <p className="text-[1.1rem] font-black text-slate-900 leading-tight">
+                                    <p className="text-[1.1rem] font-black text-white leading-tight">
                                         {donationDetails.hospitalName},<br />{donationDetails.recipientDistrict}
                                     </p>
                                 </div>
@@ -143,14 +144,14 @@ const RequestDetails = async ({ params }) => {
                         <div className="flex gap-8 mb-8">
                             {/* Date */}
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-full bg-[#fdf2f3] flex items-center justify-center shrink-0">
+                                <div className="w-12 h-12 rounded-full bg-[#fdf2f3]/30 flex items-center justify-center shrink-0">
                                     <Calendar className="w-5 h-5 text-[#ed2547]" strokeWidth={2.5} />
                                 </div>
                                 <div>
                                     <p className="text-[0.65rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-1">
                                         Required Date
                                     </p>
-                                    <p className="text-[1.25rem] font-black text-slate-900 leading-tight">
+                                    <p className="text-[1.25rem] font-black text-white leading-tight">
                                         {donationDetails.donationDate}
                                     </p>
                                 </div>
@@ -158,14 +159,14 @@ const RequestDetails = async ({ params }) => {
 
                             {/* Time */}
                             <div className="flex items-start gap-4">
-                                <div className="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
-                                    <Clock className="w-5 h-5 text-slate-700" strokeWidth={2.5} />
+                                <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center shrink-0">
+                                    <Clock className="w-5 h-5 text-white"/>
                                 </div>
                                 <div>
                                     <p className="text-[0.65rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-1">
                                         Time
                                     </p>
-                                    <p className="text-[1.25rem] font-black text-slate-900 leading-tight">
+                                    <p className="text-[1.25rem] font-black text-white leading-tight">
                                         {donationDetails.donationTime}
                                     </p>
                                 </div>
@@ -173,15 +174,15 @@ const RequestDetails = async ({ params }) => {
                         </div>
 
                         {/* Request Message Box */}
-                        <div className="bg-[#fefdf4] border border-[#f5eed6] rounded-2xl p-6 relative">
+                        <div className="bg-[#fefdf4]/30 border rounded-2xl p-6 relative">
                             <div className="flex items-center gap-2 mb-3">
                                 <MessageSquare className="w-4 h-4 text-[#bd8e43]" strokeWidth={2.5} />
                                 <span className="text-[0.7rem] font-black text-[#bd8e43] tracking-[0.15em] uppercase">
                                     Request Message
                                 </span>
                             </div>
-                            <p className="text-[1.05rem] font-bold text-slate-700 italic">
-                                Need Blood for my friend
+                            <p className="text-[1.05rem] font-bold text-white italic">
+                                {donationDetails.requestMessage}
                             </p>
                         </div>
 

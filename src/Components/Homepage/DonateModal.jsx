@@ -33,7 +33,7 @@ export default function Donatemodal({ donerId, donationStatus }) {
 
 
     return (
-        <div className="min-h-screen flex justify-center font-sans">
+        <div className="flex justify-center font-sans">
             {/* Trigger Button */}
             <button
                 onClick={() => setIsModalOpen(true)}
