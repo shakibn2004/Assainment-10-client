@@ -10,7 +10,7 @@ export function PaginationBasic({ totalPages, page }) {
         <Pagination className="justify-end">
             <Pagination.Content>
                 <Pagination.Item>
-                    <Link href={`funding?page=${page <= 1 ? 1 : Number(page) - 1}`}>
+                    <Link href={`funding?page=${page ? (page <= 1 ? 1 : Number(page) - 1) : 1}`}>
                         <Pagination.Previous isDisabled={page === 1}>
                             <Pagination.PreviousIcon />
                             <span>Previous</span>
@@ -27,7 +27,7 @@ export function PaginationBasic({ totalPages, page }) {
                     </Pagination.Item>
                 ))}
                 <Pagination.Item>
-                    <Link href={`funding?page=${page >= totalPages ? totalPages : Number(page) + 1}`}>
+                    <Link href={`funding?page=${page ? (page >= totalPages ? totalPages : Number(page) + 1) : 1}`}>
                         <Pagination.Next isDisabled={page === totalPages}>
                             <span>Next</span>
                             <Pagination.NextIcon />

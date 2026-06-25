@@ -2,7 +2,6 @@
 import { authClient } from '@/lib/auth-client';
 import { Droplets, Menu } from 'lucide-react';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const DashboardNavbar = ({ openSidebar, setOpenSidebar }) => {

@@ -111,7 +111,7 @@ const Registration = () => {
   return (
     <div className="min-h-screen bg-black py-12 px-4 sm:px-6 flex justify-center items-center">
 
-      <div className="w-full max-w-3xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-default-100 overflow-hidden">
+      <div className="w-full max-w-3xl bg-white/30 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden">
 
         <div className="p-8 md:p-12">
           {/* Header */}
@@ -329,10 +329,9 @@ const Registration = () => {
             <div className="pt-6">
               <Button
                 type="submit"
-                color="danger"
                 size="lg"
                 radius="md"
-                className="w-full font-bold py-6 text-md shadow-lg shadow-danger-500/30"
+                className="w-full bg-red-500 font-bold py-6 text-md shadow-lg shadow-danger-500/30"
               >
                 Complete Registration
               </Button>
@@ -342,7 +341,7 @@ const Registration = () => {
             <div className="text-center pt-2">
               <p className="text-sm font-medium text-default-600">
                 Already have an account?{' '}
-                <Link href="#" color="danger" className="font-bold text-sm">
+                <Link href="/login" color="danger" className="font-bold text-sm">
                   Login here
                 </Link>
               </p>

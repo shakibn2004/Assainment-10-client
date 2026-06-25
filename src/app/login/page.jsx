@@ -38,17 +38,17 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center p-4 sm:p-8">
+        <div className="min-h-screen bg-black flex items-center justify-center p-4 sm:p-8">
             <Toaster />
 
             {/* Main Card Container */}
-            <div className="w-full max-w-5xl bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
+            <div className="w-full max-w-5xl border border-white bg-black rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
 
                 {/* Decorative Top-Right Shape */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-[#e28e93] rounded-bl-[4rem] z-0 hidden md:block"></div>
+                <div className="absolute top-0 right-0 w-24 h-24 bg-black rounded-bl-[4rem] z-0 hidden md:block"></div>
 
                 {/* Left Side - Illustration Panel */}
-                <div className="w-full md:w-1/2 bg-[#e6e6e6] p-12 flex flex-col items-center justify-center relative">
+                <div className="w-full md:w-1/2 bg-black p-12 flex flex-col items-center justify-center relative">
 
                     {/* Custom SVG Illustration */}
                     <div className="mb-10 w-64 h-64 relative flex items-center justify-center">
@@ -87,10 +87,10 @@ const Login = () => {
                 </div>
 
                 {/* Right Side - Login Form Panel */}
-                <div className="w-full md:w-1/2 p-10 lg:p-16 relative z-10 bg-white">
+                <div className="w-full md:w-1/2 p-10 lg:p-16 relative z-10 bg-white/15">
 
                     <div className="text-center mb-10">
-                        <h2 className="text-3xl font-black text-[#111827] mb-3 tracking-tight">
+                        <h2 className="text-3xl font-black text-white mb-3 tracking-tight">
                             Welcome Back
                         </h2>
                         <p className="text-slate-500 text-sm font-medium">
@@ -102,7 +102,7 @@ const Login = () => {
 
                         {/* Email Field */}
                         <TextField name="email" type="email" isRequired className="w-full">
-                            <Label className="text-xs font-bold text-slate-800 mb-2 block">Email Address</Label>
+                            <Label className="text-xs font-bold text-white/40 mb-2 block">Email Address</Label>
                             <InputGroup className="h-14 bg-[#f0f4f8] border-none rounded-xl focus-within:ring-2 focus-within:ring-red-400 transition-all">
                                 <InputGroup.Prefix>
                                     <Mail className="w-5 h-5 text-red-400 mx-4 flex-shrink-0" />
@@ -118,7 +118,7 @@ const Login = () => {
                         {/* Password Field */}
                         <TextField name="password" isRequired className="w-full">
                             <div className="flex justify-between items-center mb-2">
-                                <Label className="text-xs font-bold text-slate-800 block">Password</Label>
+                                <Label className="text-xs font-bold text-white/40 block">Password</Label>
                                 <Link
                                     as={NextLink}
                                     href="#"

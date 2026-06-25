@@ -1,22 +1,33 @@
 'use client'
 import React, { useState } from 'react';
-import { Droplets, User, Menu, X } from 'lucide-react';
+import { Droplets, User, Menu, X, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
 import UserProfileCard from './UserProfileCard';
 import { authClient } from '@/lib/auth-client';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useScroll, motion } from 'motion/react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [prCard, setPrCard] = useState(false);
+  const router = useRouter()
   const pathName = usePathname()
   const {
     data: session,
     isPending,
     error
   } = authClient.useSession();
+
+  const handleSingOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login"); // redirect to login page
+        },
+      },
+    });
+  }
 
   const allNavLinks = [
     { name: 'Home', url: '/', active: true },
@@ -97,24 +108,42 @@ const Navbar = () => {
 
       {/* Mobile Navigation Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 shadow-lg absolute w-full">
+        <div onClick={() => setIsOpen(prev => !prev)} className="md:hidden bg-white border-b border-gray-100 shadow-lg absolute w-full">
           <div className="px-4 pt-2 pb-6 space-y-2">
             {navLinks.map((link) => (
-              <a
+              <Link
                 key={link.name}
-                href={link.href}
+                href={link.url}
                 className={`block px-3 py-3 rounded-md text-base font-medium ${link.active
                   ? 'bg-red-50 text-red-600'
                   : 'text-slate-700 hover:bg-slate-50 hover:text-red-600'
                   }`}
               >
                 {link.name}
-              </a>
+              </Link>
             ))}
-            <button className="w-full mt-4 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full font-medium shadow-md">
-              <User className="w-5 h-5" />
-              <span>Login</span>
-            </button>
+            {
+              session ? (
+                <div className='gap-8 flex flex-col'>
+
+                  <Link href={'/dashboard'} className="w-fit mt-4 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-3 rounded font-medium shadow-md">
+                    <LayoutDashboard className="w-5 h-5" />
+                    <span>Dashboard</span>
+                  </Link>
+                  <Link onClick={handleSingOut} href={'/login'} className="w-full mt-4 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full font-medium shadow-md">
+                    <User className="w-5 h-5" />
+                    <span>Logout</span>
+                  </Link>
+                </div>
+
+              ) : (
+                <Link href={'/login'} className="w-full mt-4 flex items-center justify-center gap-2 bg-red-600 text-white px-4 py-3 rounded-full font-medium shadow-md">
+                  <User className="w-5 h-5" />
+                  <span>Login</span>
+                </Link>
+
+              )
+            }
           </div>
         </div>
       )}

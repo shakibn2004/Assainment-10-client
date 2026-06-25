@@ -13,7 +13,7 @@ export default function FundModal() {
 
 
     return (
-        <div className="bg-gray-100 flex items-center justify-center p-4">
+        <div className="flex items-center justify-center p-4">
             {/* Trigger button just for demonstration */}
             <Button onPress={state.open} className="bg-[#E60023] hover:bg-red-700 transition-colors text-white px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-sm" >
                 Give Fund
@@ -24,12 +24,12 @@ export default function FundModal() {
                 <Modal.Backdrop className="bg-[#81858E]/70 backdrop-blur-sm">
                     <Modal.Container>
                         {/* By omitting <Modal.CloseTrigger />, we hide the close button to match the design */}
-                        <Modal.Dialog className="bg-white rounded-[2.5rem] max-w-md w-full p-0 shadow-2xl">
+                        <Modal.Dialog className="bg-black/70 rounded-[2.5rem] max-w-md w-full p-0 shadow-2xl">
                             {({ close }) => (
                                 <>
                                     <form action={'/api/checkout'} method="POST">
                                         <Modal.Header className="flex flex-col gap-3 items-center text-center pt-10 pb-4 px-6 border-none">
-                                            <Modal.Heading className="text-2xl sm:text-[26px] font-black text-[#1A1D27] tracking-tight">
+                                            <Modal.Heading className="text-2xl sm:text-[26px] font-black text-white tracking-tight">
                                                 Make a Contribution
                                             </Modal.Heading>
                                             <p className="text-[#64748B] font-medium text-[15px] leading-relaxed">

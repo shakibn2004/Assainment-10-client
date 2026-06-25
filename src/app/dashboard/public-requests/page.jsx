@@ -11,10 +11,12 @@ import {
 } from 'lucide-react';
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const DonationDashboard = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [data, setData] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0);
   const menuRef = useRef(null);
 
   const {
@@ -27,18 +29,30 @@ const DonationDashboard = () => {
     const dataFetch = async () => {
       if (session?.user?.email) {
         try {
-            const rqDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
-            if (rqDataPromised.ok) {
-                const rqData = await rqDataPromised.json();
-                setData(rqData);
-            }
+          const rqDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
+          if (rqDataPromised.ok) {
+            const rqData = await rqDataPromised.json();
+            setData(rqData);
+          }
         } catch (err) {
-            console.error("Failed to load requests:", err);
+          console.error("Failed to load requests:", err);
         }
       }
     }
     dataFetch();
-  }, [session?.user?.email]); 
+  }, [session?.user?.email, refreshKey]);
+
+
+  const handleFilter = async (e) => {
+    const status = e.target.value;
+    if (status === 'all') {
+      setRefreshKey(prev => prev + 1);
+      return
+    }
+    const filterPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/filter/${status}`);
+    const filterData = await filterPromised.json()
+    setData(filterData);
+  }
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -73,9 +87,14 @@ const DonationDashboard = () => {
             </p>
           </div>
 
-          <button className="w-full sm:w-auto flex justify-center items-center gap-2 sm:gap-3 px-6 py-3 sm:py-3.5 bg-white/10 sm:bg-white/30 rounded-xl sm:rounded-4xl shadow-sm hover:bg-white/20 sm:hover:bg-gray-50 transition-colors group">
+          <button className="w-full sm:w-auto flex justify-center items-center gap-2 sm:gap-3 px-6 py-3 sm:py-3.5 bg-white/10 sm:bg-white/30 rounded-xl sm:rounded-4xl shadow-sm transition-colors group">
             <Filter className="w-4 h-4 sm:w-5 sm:h-5 text-white sm:group-hover:text-black stroke-[2.5] transition-colors" />
-            <span className="text-white sm:group-hover:text-black font-bold text-base sm:text-lg transition-colors">All Status</span>
+            <select onChange={handleFilter} name="status" id="" className='focus:outline-none'>
+              <option value="all">All</option>
+              <option value="pending">Pending</option>
+              <option value="inprogress">Inprogress</option>
+              <option value="done">Done</option>
+            </select>
           </button>
         </div>
 
@@ -83,7 +102,7 @@ const DonationDashboard = () => {
         <div className="bg-black border border-gray-900 rounded-2xl sm:rounded-[2.5rem] shadow-sm overflow-hidden mb-8">
           {/* Overflow wrapper to enable horizontal scrolling on mobile */}
           <div className="w-full overflow-x-auto pb-4 sm:pb-0">
-            <table className="w-full min-w-[900px] text-left border-collapse">
+            <table className="w-full min-w-225 text-left border-collapse">
               <thead className="bg-black border-b border-gray-900">
                 <tr className="text-[10px] sm:text-xs font-bold tracking-widest text-gray-400 uppercase">
                   <th className="px-4 sm:px-6 md:px-10 py-4 sm:py-6 md:py-8 w-16 sm:w-20">#</th>
@@ -97,7 +116,7 @@ const DonationDashboard = () => {
               <tbody>
                 {data.map((row, index) => (
                   <tr
-                    key={row._id} 
+                    key={row._id}
                     className="group border-b border-gray-900/50 last:border-none bg-black hover:bg-white/5 transition-colors"
                   >
                     {/* ID */}
@@ -155,7 +174,7 @@ const DonationDashboard = () => {
                       </button>
 
                       {/* Dropdown Modal */}
-                      {openMenuId === row._id && ( 
+                      {openMenuId === row._id && (
                         <div className="absolute right-12 sm:right-24 top-10 sm:top-1/2 sm:-translate-y-1/2 z-50 w-48 sm:w-52 bg-gray-900 rounded-xl sm:rounded-2xl shadow-xl border border-gray-700 py-2">
                           <Link href={`/dashboard/donation-request-details/${row._id}`} className="w-full px-4 sm:px-5 py-3 sm:py-3.5 text-left flex items-center gap-3 sm:gap-3.5 hover:bg-gray-800 transition-colors group/btn">
                             <Eye className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400 group-hover/btn:text-blue-300 stroke-[2.5]" />
