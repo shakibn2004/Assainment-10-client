@@ -1,6 +1,6 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
-import { Droplet, LayoutGrid, LogOut, Pencil, UserCircle, Users } from 'lucide-react';
+import { Droplet, Home, LayoutGrid, LogOut, Pencil, UserCircle, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -50,7 +50,7 @@ const DashboardSidebar = ({ openSidebar, setOpenSidebar }) => {
         // Hide completely on mobile (handled by MobileMenu), show on tablet and up
         <div onClick={() => setOpenSidebar(prev => !prev)} className={`${openSidebar ? 'block' : 'hidden'} md:block shrink-0`}>
             {/* Added responsive widths, padding, sticky positioning, and overflow */}
-            <aside className="md:w-64 lg:w-75 h-screen sticky top-0 flex flex-col bg-black md:px-4 lg:px-6 py-8 font-sans border-r border-gray-900 overflow-y-auto overflow-x-hidden custom-scrollbar">
+            <aside className="md:w-64 lg:w-75 h-screen sticky top-0 flex flex-col bg-black md:px-4 lg:px-6 pt-8 pb-20 font-sans border-r border-gray-900 overflow-y-auto overflow-x-hidden custom-scrollbar">
                 <Toaster />
 
                 {/* MAIN MENU SECTION */}
@@ -73,6 +73,13 @@ const DashboardSidebar = ({ openSidebar, setOpenSidebar }) => {
                         >
                             <UserCircle className="w-5 h-5 lg:w-[1.35rem] lg:h-[1.35rem]" strokeWidth={2} />
                             <span className="font-bold text-[0.95rem] lg:text-[1.05rem]">My Profile</span>
+                        </Link>
+                        <Link
+                            href="/"
+                            className={`md:hidden flex items-center gap-3 lg:gap-4 px-3 lg:px-4 py-3 lg:py-3.5 ${pathName === "/" ? "bg-red-600 text-white" : "text-slate-500 hover:text-red-600"} rounded-xl lg:rounded-2xl transition-transform active:scale-[0.98]`}
+                        >
+                            <Home className="w-5 h-5 lg:w-[1.35rem] lg:h-[1.35rem]" strokeWidth={2.5} />
+                            <span className="font-bold text-[0.95rem] lg:text-[1.05rem]">Home</span>
                         </Link>
                     </nav>
                 </div>

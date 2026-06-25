@@ -12,6 +12,7 @@ import {
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { FcCancel } from 'react-icons/fc';
 
 const DonationDashboard = () => {
   const [openMenuId, setOpenMenuId] = useState(null);
@@ -69,6 +70,33 @@ const DonationDashboard = () => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
+
+  const handleUsers = async (id, status) => {
+    const userData = {
+      donationStatus: status,
+    }
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData)
+      });
+
+      if (response.ok) {
+        setData(prev =>
+          prev.map(user =>
+            user._id === id
+              ? { ...user, status }
+              : user
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Failed to update user:", error);
+      notifyErr('Update failed. Please try again.');
+    }
+  }
+
   return (
     // Adjusted outer padding for mobile vs desktop
     <div className="min-h-screen bg-black p-4 sm:p-8 md:p-10 font-sans flex justify-center">
@@ -94,6 +122,7 @@ const DonationDashboard = () => {
               <option value="pending">Pending</option>
               <option value="inprogress">Inprogress</option>
               <option value="done">Done</option>
+              <option value="cancel">Canceled</option>
             </select>
           </button>
         </div>
@@ -155,8 +184,26 @@ const DonationDashboard = () => {
 
                     {/* Status */}
                     <td className="px-4 sm:px-6 md:px-10 py-4 sm:py-6">
-                      <span className="inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#fff7ee]/10 border border-orange-500/20 text-orange-500 text-[11px] sm:text-[13px] font-bold uppercase rounded-full tracking-wide">
-                        <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                      <span className={`
+                        ${row.donationStatus === 'pending'
+                          ? 'text-yellow-600'
+                          : row.donationStatus === 'done'
+                            ? 'text-green-500'
+                            : row.donationStatus === 'inprogress'
+                              ? 'text-purple-500'
+                              : 'text-red-500'
+                        }
+                        inline-flex items-center gap-2 sm:gap-2.5 px-3 sm:px-4 py-1.5 sm:py-2 bg-[#fff7ee]/10 text-[11px] sm:text-[13px] font-bold uppercase rounded-full tracking-wide`}>
+                        <span className={`
+                           ${row.donationStatus === 'pending'
+                            ? 'bg-yellow-600'
+                            : row.donationStatus === 'done'
+                              ? 'bg-green-500'
+                              : row.donationStatus === 'inprogress'
+                                ? 'bg-purple-500'
+                                : 'bg-red-500'
+                          }
+                          w-1.5 h-1.5 rounded-full`}></span>
                         {row.donationStatus}
                       </span>
                     </td>
@@ -183,10 +230,14 @@ const DonationDashboard = () => {
 
                           <div className="h-px bg-gray-800 w-full my-0.5"></div>
 
-                          <Link href={`/dashboard/editrequest/${row._id}`} className="w-full px-4 sm:px-5 py-3 sm:py-3.5 text-left flex items-center gap-3 sm:gap-3.5 hover:bg-gray-800 transition-colors group/btn">
-                            <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400 group-hover/btn:text-orange-300 stroke-[2.5]" />
-                            <span className="font-bold text-gray-200 text-sm sm:text-[15px]">Edit Request</span>
-                          </Link>
+                          <button onClick={() => { handleUsers(row._id, 'done'), setOpenMenuId(prev => !prev) }} className="w-full px-4 sm:px-5 py-3 sm:py-3.5 text-left flex items-center gap-3 sm:gap-3.5 hover:bg-gray-800 transition-colors group/btn">
+                            <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 group-hover/btn:text-orange-300 stroke-[2.5]" />
+                            <span className="font-bold text-green-500 text-sm sm:text-[15px]">Done</span>
+                          </button>
+                          <button onClick={() => { handleUsers(row._id, 'cancel'), setOpenMenuId(prev => !prev) }} className="w-full px-4 sm:px-5 py-3 sm:py-3.5 text-left flex items-center gap-3 sm:gap-3.5 hover:bg-gray-800 transition-colors group/btn">
+                            <FcCancel className="w-4 h-4 sm:w-5 sm:h-5 text-red-500 group-hover/btn:text-orange-300 stroke-[2.5]" />
+                            <span className="font-bold text-red-500 text-sm sm:text-[15px]">Cancel</span>
+                          </button>
                         </div>
                       )}
                     </td>
@@ -194,32 +245,6 @@ const DonationDashboard = () => {
                 ))}
               </tbody>
             </table>
-          </div>
-        </div>
-
-        {/* Pagination Section */}
-        {/* Wrap columns on mobile screens */}
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-4 sm:gap-0 px-2 sm:px-4">
-          <div className="text-gray-500 font-semibold text-sm sm:text-[15px] text-center sm:text-left">
-            Showing <span className="font-bold text-gray-300">1</span> to <span className="font-bold text-gray-300">10</span> of <span className="font-bold text-gray-300">23</span> results
-          </div>
-
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <button className="p-2 sm:p-2.5 bg-gray-900 border border-gray-800 rounded-lg sm:rounded-xl hover:bg-gray-800 text-gray-400 transition-colors">
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
-            </button>
-            <button className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-[#f11a3b] text-white font-bold text-sm sm:text-[15px] rounded-lg sm:rounded-xl shadow-[0_4px_14px_rgba(241,26,59,0.35)] transition-transform hover:scale-105">
-              1
-            </button>
-            <button className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-gray-900 border border-gray-800 text-gray-400 font-bold text-sm sm:text-[15px] rounded-lg sm:rounded-xl hover:bg-gray-800 hover:text-white transition-colors">
-              2
-            </button>
-            <button className="w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center bg-gray-900 border border-gray-800 text-gray-400 font-bold text-sm sm:text-[15px] rounded-lg sm:rounded-xl hover:bg-gray-800 hover:text-white transition-colors">
-              3
-            </button>
-            <button className="p-2 sm:p-2.5 bg-gray-900 border border-gray-800 rounded-lg sm:rounded-xl hover:bg-gray-800 text-gray-400 transition-colors">
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
-            </button>
           </div>
         </div>
 

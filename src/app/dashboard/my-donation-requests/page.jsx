@@ -167,31 +167,6 @@ const DonationDashboard = () => {
           </table>
         </div>
 
-        {/* Pagination Section */}
-        <div className="flex justify-between items-center px-4">
-          <div className="text-gray-500 font-semibold text-[15px]">
-            Showing <span className="font-bold text-white">1</span> to <span className="font-bold text-white">10</span> of <span className="font-bold text-white">23</span> results
-          </div>
-
-          <div className="flex items-center gap-2">
-            <button className="p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-400 transition-colors">
-              <ChevronLeft className="w-5 h-5 stroke-[2.5]" />
-            </button>
-            <button className="w-11 h-11 flex items-center justify-center bg-[#f11a3b] text-white font-bold text-[15px] rounded-xl shadow-[0_4px_14px_rgba(241,26,59,0.35)] transition-transform hover:scale-105">
-              1
-            </button>
-            <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-200 text-gray-700 font-bold text-[15px] rounded-xl hover:bg-gray-50 transition-colors">
-              2
-            </button>
-            <button className="w-11 h-11 flex items-center justify-center bg-white border border-gray-200 text-gray-700 font-bold text-[15px] rounded-xl hover:bg-gray-50 transition-colors">
-              3
-            </button>
-            <button className="p-2.5 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 text-gray-600 transition-colors">
-              <ChevronRight className="w-5 h-5 stroke-[2.5]" />
-            </button>
-          </div>
-        </div>
-
       </div>
     </div>
   );

@@ -1,4 +1,6 @@
 'use client'
+import { authClient } from '@/lib/auth-client';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -40,8 +42,8 @@ const EditRequest = ({ params }) => {
         notify()
     }
     return (
-        <div className="min-h-screen bg-[#F8F9FA] p-8 md:p-12 font-sans flex flex-col items-center">
-            <div className="max-w-[1000px] w-full">
+        <div className="bg-black p-8 md:p-12 font-sans flex flex-col items-center">
+            <div className="max-w-250 w-full">
 
                 <Toaster />
 
@@ -49,17 +51,17 @@ const EditRequest = ({ params }) => {
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
                     <div className="flex items-start gap-5">
                         {/* Back Button */}
-                        <button className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50 text-gray-400 hover:text-gray-600 transition-colors shrink-0 mt-1">
+                        <Link href={'/dashboard/my-donation-requests'} className="w-14 h-14 bg-black rounded-full flex items-center justify-center shadow-[0_4px_20px_rgb(0,0,0,0.03)] border border-gray-50 text-gray-400 hover:text-gray-600 transition-colors shrink-0 mt-1">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M19 12H5" />
                                 <path d="M12 19l-7-7 7-7" />
                             </svg>
-                        </button>
+                        </Link>
 
                         {/* Title & Subtitle */}
                         <div>
                             <h1 className="text-[44px] font-black tracking-tight leading-none mb-2">
-                                <span className="text-[#111625]">Edit</span> <span className="text-[#EB454E]">Request</span>
+                                <span className="text-white">Edit</span> <span className="text-[#EB454E]">Request</span>
                             </h1>
                             <p className="text-gray-500 text-lg font-medium">
                                 Update the details for this blood requirement.
@@ -69,14 +71,14 @@ const EditRequest = ({ params }) => {
 
                     {/* Status Badge */}
                     <div className="flex-shrink-0 mt-2 md:mt-0">
-                        <span className="inline-flex items-center border border-orange-100 bg-[#FFF9F2] text-[#F97316] px-5 py-2.5 rounded-full text-[12px] font-black tracking-[0.15em] uppercase">
-                            CURRENT STATUS: PENDING
+                        <span className="inline-flex items-center bg-white/20 text-[#F97316] px-5 py-2.5 rounded-full text-[12px] font-black tracking-[0.15em] uppercase">
+                            CURRENT STATUS: {data.donationStatus}
                         </span>
                     </div>
                 </div>
 
                 {/* Form Card */}
-                <div className="bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.03)] p-10 md:p-12">
+                <div className="bg-black rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.03)] p-10 md:p-12">
                     <form onSubmit={handleEdit}>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 mb-8">
@@ -94,7 +96,7 @@ const EditRequest = ({ params }) => {
                                     type="text"
                                     name='recipientName'
                                     defaultValue={data.recipientName}
-                                    className="w-full capitalize bg-[#F8F9FA] rounded-[16px] px-6 py-5 text-[#111625] font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
+                                    className="w-full capitalize bg-[#F8F9FA]/30 rounded-xl px-6 py-5 text-white font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
                                 />
                             </div>
 
@@ -111,7 +113,7 @@ const EditRequest = ({ params }) => {
                                     type="text"
                                     name='recipientDistrict'
                                     defaultValue={data.recipientDistrict}
-                                    className="w-full capitalize bg-[#F8F9FA] rounded-[16px] px-6 py-5 text-[#111625] font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
+                                    className="w-full capitalize bg-[#F8F9FA]/30 rounded-[16px] px-6 py-5 text-white font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
                                 />
                             </div>
 
@@ -128,7 +130,7 @@ const EditRequest = ({ params }) => {
                                     type="text"
                                     name='recipientUpazila'
                                     defaultValue={data.recipientUpazila}
-                                    className="w-full capitalize bg-[#F8F9FA] rounded-[16px] px-6 py-5 text-[#111625] font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
+                                    className="w-full capitalize bg-[#F8F9FA]/30 rounded-[16px] px-6 py-5 text-white font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
                                 />
                             </div>
 
@@ -147,7 +149,7 @@ const EditRequest = ({ params }) => {
                                     type="text"
                                     name='hospitalName'
                                     defaultValue={data.hospitalName}
-                                    className="w-full capitalize bg-[#F8F9FA] rounded-[16px] px-6 py-5 text-[#111625] font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
+                                    className="w-full capitalize bg-[#F8F9FA]/30 rounded-[16px] px-6 py-5 text-white font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent"
                                 />
                             </div>
                         </div>
@@ -164,22 +166,23 @@ const EditRequest = ({ params }) => {
                             <textarea
                                 defaultValue={data.fullAddress}
                                 name='fullAddress'
-                                className="w-full bg-[#F8F9FA] rounded-[16px] px-6 py-5 text-[#111625] font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent resize-none h-[140px]"
+                                className="w-full bg-[#F8F9FA]/30 rounded-[16px] px-6 py-5 text-white/80 font-bold text-[17px] focus:outline-none focus:ring-2 focus:ring-gray-200 transition-all border border-transparent resize-none h-[140px]"
                             ></textarea>
                         </div>
 
                         {/* Form Actions */}
                         <div className="flex flex-col-reverse sm:flex-row justify-end items-center gap-4">
-                            <button
-                                type="button"
-                                className="w-full sm:w-auto bg-[#F4F5F7] hover:bg-[#E5E7EB] text-gray-500 px-10 py-4 rounded-[14px] font-bold text-[16px] transition-colors"
-                            >
-                                Cancel
-                            </button>
+                            <Link href={'/dashboard/my-donation-requests'}>
+                                <button
+                                    className="w-full sm:w-auto bg-[#F4F5F7] hover:bg-[#E5E7EB] text-gray-500 px-10 py-4 rounded-[14px] font-bold text-[16px] transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                            </Link>
 
                             <button
                                 type="submit"
-                                className="w-full sm:w-auto bg-[#EB454E] hover:bg-[#d43d45] text-white px-8 py-4 rounded-[14px] font-bold text-[16px] transition-all flex items-center justify-center gap-2.5 shadow-[0_8px_20px_rgba(235,69,78,0.25)] hover:shadow-[0_8px_25px_rgba(235,69,78,0.35)]"
+                                className="w-full sm:w-auto bg-red-500 hover:bg-[#d43d45] text-white px-8 py-4 rounded-[14px] font-bold text-[16px] transition-all flex items-center justify-center gap-2.5 shadow-[0_8px_20px_rgba(235,69,78,0.25)] hover:shadow-[0_8px_25px_rgba(235,69,78,0.35)]"
                             >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />

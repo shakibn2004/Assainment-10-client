@@ -5,7 +5,7 @@ import DashboardSidebar from '@/Components/Homepage/DashboardSidebar';
 import { useState } from 'react';
 
 const Sidebar = ({ children }) => {
-    const [openSidebar, setOpenSidebar] = useState(true);
+    const [openSidebar, setOpenSidebar] = useState(false);
 
     return (
         <div className='h-screen flex flex-col overflow-hidden'>
