@@ -162,7 +162,7 @@ const DonationDashboard = () => {
                           {row.recipientName}
                         </span>
                         <span className="text-[10px] sm:text-xs font-bold text-gray-500 mt-1 sm:mt-1.5 uppercase tracking-wide">
-                          postedBy you
+                          postedBy {row.requesterName}
                         </span>
                       </div>
                     </td>

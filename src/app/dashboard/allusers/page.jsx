@@ -1,5 +1,7 @@
 'use client'
+import { authClient } from '@/lib/auth-client';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -10,6 +12,16 @@ export default function UserManagementSection() {
     const [openDropdownId, setOpenDropdownId] = useState(null);
     const [usersData, setUsersData] = useState([]);
     const dropdownRef = useRef(null);
+
+    const {
+        data: session,
+        isPending,
+        error
+    } = authClient.useSession();
+
+    if (!session && !isPending) {
+        redirect('/login')
+    }
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -67,11 +79,12 @@ export default function UserManagementSection() {
         }
     }
 
+
     return (
         // Adjusted padding for mobile (p-4) vs desktop (sm:p-8)
         <div className="min-h-screen bg-black p-4 sm:p-8 flex flex-col items-center font-sans text-gray-900">
             <Toaster />
-            
+
             {/* Header Section */}
             <div className="w-full max-w-6xl mb-6 sm:mb-8 text-center sm:text-left">
                 {/* Scaled text for smaller screens */}

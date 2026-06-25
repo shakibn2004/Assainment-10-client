@@ -23,6 +23,10 @@ const DonationDashboard = () => {
     error
   } = authClient.useSession();
 
+  if (!session && !isPending) {
+    redirect('/login')
+  }
+
   useEffect(() => {
     const dataFetch = async () => {
       // Added optional chaining to prevent fetch errors if session isn't loaded yet

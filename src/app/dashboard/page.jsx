@@ -4,7 +4,7 @@ import { Calendar, Edit2, Eye, Map, MapPin, MoreVertical, Syringe, Timer } from 
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 import AdminDashboard from '@/Components/Homepage/AdminDashboard';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 
 const DashboardWelcome = () => {
@@ -20,6 +20,9 @@ const DashboardWelcome = () => {
     error
   } = authClient.useSession();
 
+  if (!session && !isPending) {
+    redirect('/login')
+  }
 
   const toggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
@@ -28,9 +31,12 @@ const DashboardWelcome = () => {
   useEffect(() => {
     const dataLoad = async () => {
       const { data: token } = await authClient.token();
-      console.log(token);
 
-      const dataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
+      const dataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`, {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       const allData = await dataPromised.json();
       setData(allData);
 
@@ -41,6 +47,7 @@ const DashboardWelcome = () => {
     }
     dataLoad();
   }, [session])
+
 
   return (
     <div className="w-full max-w-5xl mx-auto p-8 font-sans bg-black min-h-screen">
@@ -120,7 +127,7 @@ const DashboardWelcome = () => {
                                   {row.recipientName}
                                 </span>
                                 <span className="text-xs font-bold text-gray-400 mt-1.5 uppercase tracking-wide">
-                                  postedBy you
+                                  postedBy {row.requesterName}
                                 </span>
                               </div>
                             </td>

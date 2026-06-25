@@ -1,7 +1,7 @@
 'use client'
 import { authClient } from '@/lib/auth-client';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { redirect, useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -16,6 +16,10 @@ const EditRequest = ({ params }) => {
         isPending,
         error
     } = authClient.useSession();
+
+    if (!session && !isPending) {
+        redirect('/login')
+    }
 
 
     useEffect(() => {

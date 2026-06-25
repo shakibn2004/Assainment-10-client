@@ -16,6 +16,7 @@ import {
 import { Button, Card, Input, Label, ListBox, Select, TextArea } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
 import toast, { Toaster } from 'react-hot-toast';
+import { redirect } from 'next/navigation';
 
 const notify = () => toast.success('Request Created Successfully');
 
@@ -31,12 +32,19 @@ const NewDonationRequest = () => {
     error
   } = authClient.useSession();
 
+  if (!session && !isPending) {
+    redirect('/login')
+  }
+  
   const handleRequestCreation = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
     const userData = { ...data, donationStatus: "pending", donorName: null, donorEmail: null }
+
+    const token = await authClient.token()
+    console.log(token);
 
     await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`, {
       method: 'POST',
@@ -194,9 +202,9 @@ const NewDonationRequest = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="flex flex-col">
                       <Label className={labelStyles}>District</Label>
-                      <Select 
+                      <Select
                         onChange={(value) => { setDistrict(value) }}
-                        name="recipientDistrict" 
+                        name="recipientDistrict"
                         required
                       >
                         <Select.Trigger className="rounded-xl border border-gray-800 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">

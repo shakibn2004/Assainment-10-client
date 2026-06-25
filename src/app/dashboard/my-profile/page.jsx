@@ -12,6 +12,7 @@ import {
 import Image from 'next/image';
 import { authClient } from '@/lib/auth-client';
 import toast, { Toaster } from 'react-hot-toast';
+import { redirect } from 'next/navigation';
 
 const notify = () => toast.success('Profile Updated');
 
@@ -26,6 +27,10 @@ const ProfileSettings = (req) => {
         isPending,
         error
     } = authClient.useSession();
+
+    if (!session && !isPending) {
+        redirect('/login')
+    }
 
     useEffect(() => {
         if (!session) return;
@@ -74,7 +79,7 @@ const ProfileSettings = (req) => {
         // Adjusted padding for mobile (p-4) and desktop (md:p-8)
         <form onSubmit={handleEdit} className="flex-1 overflow-auto w-full max-w-5xl mx-auto p-4 md:p-8 font-sans bg-black min-h-screen">
             <Toaster />
-            
+
             {/* Header Section */}
             {/* Stack on mobile, row on sm screens */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6 sm:mb-8">
@@ -89,16 +94,16 @@ const ProfileSettings = (req) => {
                 </div>
 
                 <div className='flex gap-3 sm:gap-6 w-full sm:w-auto'>
-                    <button 
+                    <button
                         type="button"
-                        onClick={() => setEditProfile(pre => !pre)} 
-                        className={`${editProfile ? 'flex' : 'hidden'} flex-1 sm:flex-none justify-center items-center gap-2.5 px-4 sm:px-6 py-2.5 bg-slate-400/50 text-white rounded-full font-bold text-[0.85rem] sm:text-[0.95rem] transition-colors`} 
+                        onClick={() => setEditProfile(pre => !pre)}
+                        className={`${editProfile ? 'flex' : 'hidden'} flex-1 sm:flex-none justify-center items-center gap-2.5 px-4 sm:px-6 py-2.5 bg-slate-400/50 text-white rounded-full font-bold text-[0.85rem] sm:text-[0.95rem] transition-colors`}
                     >
                         Cancel
                     </button>
-                    <button 
-                        type='submit' 
-                        onClick={handleButton} 
+                    <button
+                        type='submit'
+                        onClick={handleButton}
                         className="flex-1 sm:flex-none flex justify-center items-center gap-2 sm:gap-2.5 px-4 sm:px-6 py-2.5 bg-white border-2 border-red-50 text-[#ed2547] rounded-full font-bold text-[0.85rem] sm:text-[0.95rem] shadow-sm hover:bg-red-50 transition-colors"
                     >
                         {
@@ -132,7 +137,7 @@ const ProfileSettings = (req) => {
                                 <Image width={120} height={120} sizes='100vw' style={{ width: '100%', height: '100%', objectFit: 'cover' }} src={userData?.image} alt='User Image' />
                             )}
                         </div>
-                        
+
                         <div className="pt-2 sm:pt-20 flex flex-col items-center sm:items-start w-full">
                             <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 w-full sm:w-auto text-center sm:text-left">
                                 <h2 className="text-[1.5rem] sm:text-[2rem] font-black text-white leading-none">
@@ -238,7 +243,7 @@ const ProfileSettings = (req) => {
                                     <Droplet className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.5} />
                                 </div>
                                 <h3 className="text-lg sm:text-xl font-black text-white leading-tight">
-                                    Medical<br className="hidden sm:block" /> { /* Keep br on desktop, inline on mobile */ } 
+                                    Medical<br className="hidden sm:block" /> { /* Keep br on desktop, inline on mobile */}
                                     <span className="sm:hidden"> </span>Profile
                                 </h3>
                             </div>

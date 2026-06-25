@@ -10,14 +10,25 @@ import {
 } from 'lucide-react';
 import Donatemodal from '@/Components/Homepage/DonateModal';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
+import { authClient } from '@/lib/auth-client';
 
 const RequestDetails = async ({ params }) => {
+    const { session } = await auth.api.getSession({
+        headers: await headers() // Forwards session cookies automatically
+    });
+
+    if (!session) {
+        redirect('/login')
+    }
+
     const resolvedParams = await params;
     const donerId = resolvedParams.donerId;
     const donationPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${donerId}`);
     const donationDetails = await donationPromised.json();
 
-    
     return (
         <div className="w-full max-w-250 mx-auto p-8 font-sans bg-black min-h-screen">
 
@@ -39,7 +50,7 @@ const RequestDetails = async ({ params }) => {
                 </p>
 
                 {/* Floating Status Badge */}
-                <div className={`${donationDetails.donationStatus==='done'?'bg-green-200 text-green-600':'bg-[#fcecdb] text-[#e87a2a]'} absolute right-0 bottom-0 flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[0.8rem] font-black uppercase tracking-widest shadow-sm`}>
+                <div className={`${donationDetails.donationStatus === 'done' ? 'bg-green-200 text-green-600' : 'bg-[#fcecdb] text-[#e87a2a]'} absolute right-0 bottom-0 flex items-center gap-1.5 px-5 py-2.5 rounded-full text-[0.8rem] font-black uppercase tracking-widest shadow-sm`}>
                     <Clock className="w-4 h-4" strokeWidth={3} />
                     {donationDetails.donationStatus}
                 </div>
@@ -160,7 +171,7 @@ const RequestDetails = async ({ params }) => {
                             {/* Time */}
                             <div className="flex items-start gap-4">
                                 <div className="w-12 h-12 rounded-full bg-white/30 flex items-center justify-center shrink-0">
-                                    <Clock className="w-5 h-5 text-white"/>
+                                    <Clock className="w-5 h-5 text-white" />
                                 </div>
                                 <div>
                                     <p className="text-[0.65rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-1">

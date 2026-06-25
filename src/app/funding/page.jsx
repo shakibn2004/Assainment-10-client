@@ -1,13 +1,21 @@
 import React from 'react';
-import { Wallet, FileText, ChevronLeft, ChevronRight, Lock } from 'lucide-react';
+import { FileText, Lock } from 'lucide-react';
 import { PaginationBasic } from '@/Components/Homepage/Pagination';
 import FundModal from '@/Components/Homepage/FundModal';
-import { stripe } from '@/lib/stripe';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 
 
 const FundingHistory = async ({ searchParams }) => {
+    const session = await auth.api.getSession({
+        headers: await headers() 
+    });
+    if (!session) {
+        redirect('/login')
+    }
+
     const { page } = await searchParams;
     const fundingPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding?page=${page}`);
     const data = await fundingPromised.json();
