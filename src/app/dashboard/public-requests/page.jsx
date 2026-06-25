@@ -86,7 +86,7 @@ const DonationDashboard = () => {
         setData(prev =>
           prev.map(user =>
             user._id === id
-              ? { ...user, status }
+              ? { ...user, donationStatus: status }
               : user
           )
         );
