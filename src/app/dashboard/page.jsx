@@ -4,6 +4,7 @@ import { Calendar, Edit2, Eye, Map, MapPin, MoreVertical, Syringe, Timer } from 
 import Link from 'next/link';
 import { authClient } from '@/lib/auth-client';
 import AdminDashboard from '@/Components/Homepage/AdminDashboard';
+import { useRouter } from 'next/navigation';
 
 
 const DashboardWelcome = () => {
@@ -11,6 +12,7 @@ const DashboardWelcome = () => {
   const [data, setData] = useState([]);
   const [userData, setUserData] = useState([]);
   const menuRef = useRef(null);
+  const router = useRouter()
 
   const {
     data: session,
@@ -18,12 +20,16 @@ const DashboardWelcome = () => {
     error
   } = authClient.useSession();
 
+
   const toggleMenu = (id) => {
     setOpenMenuId(openMenuId === id ? null : id);
   };
 
   useEffect(() => {
     const dataLoad = async () => {
+      const { data: token } = await authClient.token();
+      console.log(token);
+
       const dataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
       const allData = await dataPromised.json();
       setData(allData);
@@ -37,14 +43,14 @@ const DashboardWelcome = () => {
   }, [session])
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-8 font-sans bg-[#fafbfc] min-h-screen">
+    <div className="w-full max-w-5xl mx-auto p-8 font-sans bg-black min-h-screen">
 
       {/* Header Section */}
       <div className="mb-10">
         <h1 className="text-[2.75rem] font-black tracking-tight leading-tight mb-2">
-          <span className="text-slate-900">Hello, </span>
+          <span className="text-white">Hello, </span>
           <span className="text-[#ed2547]">{session?.user?.name}</span>
-          <span className="text-slate-900">!</span>
+          <span className="text-white">!</span>
         </h1>
         <p className="text-slate-500 font-medium text-[1.05rem]">
           Manage your activities and help save lives today. dear {userData.role}

@@ -3,9 +3,17 @@ import { Wallet, FileText, ChevronLeft, ChevronRight, Lock } from 'lucide-react'
 import { PaginationBasic } from '@/Components/Homepage/Pagination';
 import FundModal from '@/Components/Homepage/FundModal';
 import { stripe } from '@/lib/stripe';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 
 const FundingHistory = async ({ searchParams }) => {
+    // token access
+
+    // const { token } = await auth.api.getAccessToken({
+    //     headers: await headers(),
+    // })
+
     const { page } = await searchParams;
     const fundingPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding?page=${page}`);
     const data = await fundingPromised.json();

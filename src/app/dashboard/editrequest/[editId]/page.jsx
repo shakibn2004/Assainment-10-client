@@ -1,12 +1,23 @@
 'use client'
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+
+const notify = () => toast.success('Details Upadated');
 
 const EditRequest = ({ params }) => {
     const [data, setData] = useState([])
     const id = useParams().editId;
 
+    const {
+        data: session,
+        isPending,
+        error
+    } = authClient.useSession();
+
+
     useEffect(() => {
+        if (!session?.user?.email) return;
         const dataLoad = async () => {
             const singleDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests/${id}`)
             const singleData = await singleDataPromised.json();
@@ -26,10 +37,13 @@ const EditRequest = ({ params }) => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(userData)
         });
+        notify()
     }
     return (
         <div className="min-h-screen bg-[#F8F9FA] p-8 md:p-12 font-sans flex flex-col items-center">
             <div className="max-w-[1000px] w-full">
+
+                <Toaster />
 
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">

@@ -27,7 +27,7 @@ export default function Donatemodal({ donerId, donationStatus }) {
 
         setIsModalOpen(false)
 
-        redirect(`${process.env.BETTER_AUTH_URL}/dashboard/donation-request-details/${donerId}`)
+        redirect(`${process.env.NEXT_PUBLIC_BETTER_AUTH_URL}/dashboard/donation-request-details/${donerId}`)
 
     };
 
@@ -37,8 +37,8 @@ export default function Donatemodal({ donerId, donationStatus }) {
             {/* Trigger Button */}
             <button
                 onClick={() => setIsModalOpen(true)}
-                disabled={donationStatus === 'done' ? true : false}
-                className={`${donationStatus === 'done' ? 'bg-gray-400 ' : 'bg-red-500 hover:bg-red-600'} px-6 py-3 h-fit text-white font-bold rounded-xl transition-colors shadow-md`}
+                disabled={donationStatus === 'inprogress' ? true : false}
+                className={`${donationStatus === 'inprogress' ? 'bg-gray-400 ' : 'bg-red-500 hover:bg-red-600'} px-6 py-3 h-fit text-white font-bold rounded-xl transition-colors shadow-md`}
             >
                 Donate Now
             </button>
@@ -86,6 +86,7 @@ export default function Donatemodal({ donerId, donationStatus }) {
                                 <input
                                     type="text"
                                     name='donorName'
+                                    readOnly
                                     defaultValue={session?.user?.name}
                                     className="w-full px-4 py-3.5 rounded-xl border-2 border-blue-500 text-sm font-bold text-gray-600 outline-none focus:ring-4 focus:ring-blue-500/10 transition-all"
                                 />
@@ -112,7 +113,7 @@ export default function Donatemodal({ donerId, donationStatus }) {
                                 <input
                                     type="email"
                                     name='donationStatus'
-                                    defaultValue='done'
+                                    defaultValue='inprogress'
                                     readOnly
                                     className="w-full px-4 py-3.5 rounded-xl bg-gray-50 border border-transparent text-sm font-bold text-gray-500 outline-none cursor-not-allowed"
                                 />

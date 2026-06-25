@@ -6,6 +6,7 @@ import UserProfileCard from './UserProfileCard';
 import { authClient } from '@/lib/auth-client';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useScroll, motion } from 'motion/react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,6 +28,9 @@ const Navbar = () => {
   const navLinks = session
     ? allNavLinks.filter(link => link.name !== "Search Donor")
     : allNavLinks.filter(link => link.name !== "Funding");
+
+  const { scrollYProgress } = useScroll();
+
 
   return (
     <nav className="bg-black/90 sticky w-full top-0 z-50 backdrop-blur-md shadow-sm border-b border-gray-100 transition-all duration-300">
@@ -67,7 +71,7 @@ const Navbar = () => {
               Login
             </Link>
             <div onClick={() => setPrCard(p => !p)} className={`${session ? "flex" : "hidden"} overflow-hidden px-1 pt-0.5 w-12 h-12 text-3xl cursor-pointer flex items-center justify-center rounded-full shadow-[0_0_2px]  hover:border-2 hover:border-red-500`}>
-              <Image width={0} height={0} sizes='100vw' style={{width: '100%', height: '100%'}} src={session?.user?.image} alt='User Image'/>
+              <Image width={0} height={0} sizes='100vw' style={{ width: '100%', height: '100%' }} src={session?.user?.image} alt='User Image' />
             </div>
           </div>
 
@@ -85,6 +89,11 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+      <motion.div
+        className="fixed top-20 left-0 right-0 h-2 bg-red-600 z-999"
+        style={{ scaleX: scrollYProgress, originX: 0 }}
+      />
+
 
       {/* Mobile Navigation Menu */}
       {isOpen && (

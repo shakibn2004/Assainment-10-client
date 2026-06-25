@@ -5,6 +5,9 @@ import NextLink from 'next/link';
 import { TextField, Label, InputGroup, Button, Link } from "@heroui/react";
 import { redirect, useRouter } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
+import toast, { Toaster } from 'react-hot-toast';
+
+const notify = () => toast('Sign in successfull');
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +28,7 @@ const Login = () => {
         }, {
             onSuccess: () => {
                 router.push('/')
+                notify()
             },
 
             onError: (ctx) => {
@@ -35,6 +39,7 @@ const Login = () => {
 
     return (
         <div className="min-h-screen bg-[#f3f4f6] flex items-center justify-center p-4 sm:p-8">
+            <Toaster />
 
             {/* Main Card Container */}
             <div className="w-full max-w-5xl bg-white rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row relative">

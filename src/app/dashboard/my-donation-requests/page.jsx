@@ -27,7 +27,7 @@ const DonationDashboard = () => {
     const dataFetch = async () => {
       // Added optional chaining to prevent fetch errors if session isn't loaded yet
       if (session?.user?.email) {
-        const rqDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/dashboard/my-donation-requests/${session.user.email}`)
+        const rqDataPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/dashboard/my-donation-requests/${session?.user?.email}`)
         const rqData = await rqDataPromised.json();
         setData(rqData);
       }
@@ -51,13 +51,13 @@ const DonationDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6f8] p-10 font-sans flex justify-center">
-      <div className="w-full max-w-[1200px]">
+    <div className="min-h-screen bg-black p-10 font-sans flex justify-center">
+      <div className="w-full max-w-300">
 
         {/* Header Section */}
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h1 className="text-[2.5rem] font-black tracking-tight text-gray-900 leading-none">
+            <h1 className="text-[2.5rem] font-black tracking-tight text-white leading-none">
               My <span className="text-[#f11a3b]">Donation Requests</span>
             </h1>
             <p className="text-gray-500 text-lg mt-3 font-medium">
@@ -65,16 +65,16 @@ const DonationDashboard = () => {
             </p>
           </div>
 
-          <button className="flex items-center gap-3 px-6 py-3.5 bg-white border border-gray-200 rounded-4xl shadow-sm hover:bg-gray-50 transition-colors">
-            <Filter className="w-5 h-5 text-gray-500 stroke-[2.5]" />
-            <span className="text-gray-800 font-bold text-lg">All Status</span>
+          <button className="flex items-center gap-3 px-6 py-3.5 bg-white/40 rounded-4xl shadow-sm hover:bg-gray-50 transition-colors">
+            <Filter className="w-5 h-5 text-white stroke-[2.5]" />
+            <span className="text-white font-bold text-lg">All Status</span>
           </button>
         </div>
 
         {/* Table Section */}
-        <div className="bg-white border border-gray-200 rounded-[2.5rem] shadow-sm overflow-hidden mb-8">
+        <div className="bg-black border border-gray-200 rounded-[2.5rem] shadow-sm overflow-hidden mb-8">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-[#fcfcfc] border-b border-gray-100">
+            <thead className="bg-black border-b">
               <tr className="text-xs font-bold tracking-widest text-gray-400 uppercase">
                 <th className="px-10 py-8 w-20">#</th>
                 <th className="px-10 py-8">Recipient Info</th>
@@ -88,7 +88,7 @@ const DonationDashboard = () => {
               {data.map((row, index) => (
                 <tr
                   key={row._id} // <-- Fixed to _id
-                  className={`group border-b border-gray-100 last:border-none bg-white`}
+                  className={`group last:border-none bg-black`}
                 >
                   {/* ID */}
                   <td className="px-10 py-6">
@@ -100,10 +100,10 @@ const DonationDashboard = () => {
                   {/* Recipient Info */}
                   <td className="px-10 py-6">
                     <div className="flex flex-col">
-                      <span className="text-lg font-bold text-gray-900 leading-tight">
+                      <span className="text-lg font-bold text-white leading-tight">
                         {row.recipientName}
                       </span>
-                      <span className="text-xs font-bold text-gray-400 mt-1.5 uppercase tracking-wide">
+                      <span className="text-xs font-bold text-white/40 mt-1.5 uppercase tracking-wide">
                         postedBy you
                       </span>
                     </div>
@@ -111,7 +111,7 @@ const DonationDashboard = () => {
 
                   {/* Location */}
                   <td className="px-10 py-6">
-                    <div className="flex items-center gap-2.5 text-gray-800 font-bold text-[17px]">
+                    <div className="flex items-center gap-2.5 text-white font-bold text-[17px]">
                       <MapPin className="w-5.5 h-5.5 text-[#f11a3b] stroke-[2.5]" />
                       {row.recipientDistrict}
                     </div>
@@ -119,7 +119,7 @@ const DonationDashboard = () => {
 
                   {/* Group */}
                   <td className="px-10 py-6">
-                    <span className="inline-flex items-center justify-center px-4 py-2 bg-[#fdf0f0] text-[#f11a3b] font-black text-lg rounded-2xl shadow-sm min-w-[3.5rem]">
+                    <span className="inline-flex items-center justify-center px-4 py-2 bg-[#fdf0f0]/30 text-[#f11a3b] font-black text-lg rounded-2xl shadow-sm min-w-[3.5rem]">
                       {row.bloodGroup}
                     </span>
                   </td>
@@ -170,7 +170,7 @@ const DonationDashboard = () => {
         {/* Pagination Section */}
         <div className="flex justify-between items-center px-4">
           <div className="text-gray-500 font-semibold text-[15px]">
-            Showing <span className="font-bold text-gray-800">1</span> to <span className="font-bold text-gray-800">10</span> of <span className="font-bold text-gray-800">23</span> results
+            Showing <span className="font-bold text-white">1</span> to <span className="font-bold text-white">10</span> of <span className="font-bold text-white">23</span> results
           </div>
 
           <div className="flex items-center gap-2">

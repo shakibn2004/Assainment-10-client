@@ -11,35 +11,36 @@ const AdminDashboard = ({ session }) => {
 
     useEffect(() => {
         const dataFetch = async () => {
-            const allUserPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers`);
-            const allUserSet = await allUserPromised.json();
-            setAllUsers(allUserSet);
+            try {
+                const allUserPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers`);
+                const allUserSet = await allUserPromised.json();
+                setAllUsers(allUserSet || []);
 
-            const fundingPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding`);
-            const fundingSet = await fundingPromised.json();
-            setAllFunding(fundingSet);
-            
-            const funding = fundingSet?.data?.reduce((sum, item) => {
-                return sum + Number(item.amount);
-            }, 0);
-            setFunding(funding)
+                const fundingPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/funding`);
+                const fundingSet = await fundingPromised.json();
+                setAllFunding(fundingSet || []);
+                
+                const calculatedFunding = fundingSet?.data?.reduce((sum, item) => {
+                    return sum + Number(item.amount || 0);
+                }, 0);
+                setFunding(calculatedFunding || 0)
 
-            const bloodPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
-            const bloodSet = await bloodPromised.json();
-            setBloodRequest(bloodSet);
+                const bloodPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/donationrequests`);
+                const bloodSet = await bloodPromised.json();
+                setBloodRequest(bloodSet || []);
+            } catch (error) {
+                console.error("Error fetching dashboard stats:", error);
+            }
         }
         dataFetch();
     }, [])
 
-
-
-
     const stats = [
         {
             title: "Total Donors",
-            value: `${allUsers?.length}`,
+            value: `${allUsers?.length || 0}`,
             trend: "+12%",
-            iconBg: "bg-[#F3F6FF]",
+            iconBg: "bg-white/30", 
             iconColor: "text-[#4F65F6]",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -54,7 +55,7 @@ const AdminDashboard = ({ session }) => {
             title: "Total Funding",
             value: `$${funding}`,
             trend: "+5%",
-            iconBg: "bg-[#F0FDF4]",
+            iconBg: "bg-white/30",
             iconColor: "text-[#22C55E]",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -66,9 +67,9 @@ const AdminDashboard = ({ session }) => {
         },
         {
             title: "Blood Requests",
-            value: `${bloodRequest?.length}`,
+            value: `${bloodRequest?.length || 0}`,
             trend: "+8%",
-            iconBg: "bg-[#FEF2F2]",
+            iconBg: "bg-white/30",
             iconColor: "text-[#E11D48]",
             icon: (
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round">
@@ -79,22 +80,25 @@ const AdminDashboard = ({ session }) => {
     ];
 
     return (
-        <div className="bg-[#fafbfc] min-h-screen p-8 md:p-12 font-sans w-full flex justify-center">
+        // Adjusted outer padding for mobile vs desktop
+        <div className="bg-black min-h-screen p-4 sm:p-8 md:p-12 font-sans w-full flex justify-center">
             <div className="max-w-6xl w-full">
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* Stats Grid: 1 col on mobile, 2 on tablet, 3 on desktop */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     {stats.map((stat, index) => (
                         <div
                             key={index}
-                            className="bg-white rounded-[2rem] p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-50 flex flex-col justify-between h-[200px]"
+                            // Responsive card padding, border radius, and dynamic height
+                            className="bg-black rounded-3xl sm:rounded-[2rem] p-6 lg:p-8 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-800 flex flex-col justify-between min-h-[160px] sm:min-h-[180px] lg:h-[200px]"
                         >
                             {/* Top Row: Icon & Trend */}
-                            <div className="flex justify-between items-start mb-6">
-                                <div className={`w-14 h-14 rounded-[1rem] flex items-center justify-center ${stat.iconBg} ${stat.iconColor}`}>
+                            <div className="flex justify-between items-start mb-4 sm:mb-6">
+                                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center ${stat.iconBg} ${stat.iconColor}`}>
                                     {stat.icon}
                                 </div>
 
-                                <div className="flex items-center gap-1 bg-[#F0FDF4] text-[#15803D] px-3 py-1.5 rounded-full font-bold text-[13px]">
+                                <div className="flex bg-white/5 items-center gap-1 text-[#22C55E] px-3 py-1 sm:py-1.5 rounded-full font-bold text-xs sm:text-[13px] border border-[#22C55E]/20">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                         <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
                                         <polyline points="17 6 23 6 23 12" />
@@ -105,10 +109,11 @@ const AdminDashboard = ({ session }) => {
 
                             {/* Bottom Row: Title & Value */}
                             <div>
-                                <h3 className="text-gray-500 font-bold text-[14px] mb-1">
+                                <h3 className="text-gray-500 font-bold text-xs sm:text-[14px] mb-1">
                                     {stat.title}
                                 </h3>
-                                <p className="text-[#111625] font-black text-[38px] leading-none tracking-tight">
+                                {/* Responsive text size for the value */}
+                                <p className="text-white font-black text-3xl sm:text-[38px] leading-none tracking-tight">
                                     {stat.value}
                                 </p>
                             </div>

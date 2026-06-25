@@ -15,7 +15,9 @@ import {
 } from 'lucide-react';
 import { Button, Card, Input, Label, ListBox, Select, TextArea } from '@heroui/react';
 import { authClient } from '@/lib/auth-client';
-import { data, div, h1 } from 'framer-motion/client';
+import toast, { Toaster } from 'react-hot-toast';
+
+const notify = () => toast.success('Request Created Successfully');
 
 const NewDonationRequest = () => {
   const [district, setDistrict] = useState('');
@@ -41,6 +43,7 @@ const NewDonationRequest = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
+    notify()
   }
 
   useEffect(() => {
@@ -55,16 +58,17 @@ const NewDonationRequest = () => {
       setUpazilas(upazilas);
     }
 
-    handleFetch();
+    if (district) {
+      handleFetch();
+    }
   }, [district])
 
   useEffect(() => {
     const handleUser = async () => {
+      if (!session?.user?.email) return;
       const singleUserPromised = await fetch(`${process.env.NEXT_PUBLIC_LOCAL_URI}/allusers/${session?.user?.email}`);
       const singleUser = await singleUserPromised.json();
       setSingleUserData(singleUser);
-      console.log(singleUser);
-
     }
     handleUser()
   }, [session])
@@ -78,32 +82,34 @@ const NewDonationRequest = () => {
     <div>
       {
         singleUserData.status !== 'block' ? (
-          <div className="w-full max-w-250 mx-auto p-8 font-sans  min-h-screen" >
-
+          // Adjusted max-width to a standard Tailwind class (max-w-5xl) and added responsive padding
+          <div className="w-full max-w-5xl mx-auto p-4 sm:p-6 md:p-8 font-sans min-h-screen">
+            <Toaster />
             {/* Header Section */}
-            < div className="mb-10" >
-              <h1 className="text-[2.75rem] font-black tracking-tight leading-tight mb-2">
+            <div className="mb-8 sm:mb-10">
+              {/* Responsive text scaling for the main header */}
+              <h1 className="text-3xl sm:text-4xl md:text-[2.75rem] font-black tracking-tight leading-tight mb-2">
                 <span className="text-white">New </span>
                 <span className="text-[#ed2547]">Donation Request</span>
               </h1>
-              <p className="text-slate-500 font-medium text-[1.05rem]">
+              <p className="text-slate-500 font-medium text-sm sm:text-base md:text-[1.05rem]">
                 Complete the form below to broadcast an urgent request to the donor community.
               </p>
-            </div >
+            </div>
 
-            <form onSubmit={handleRequestCreation} className="space-y-6">
+            <form onSubmit={handleRequestCreation} className="space-y-4 sm:space-y-6">
 
               {/* Section 1: Requester Info */}
-              <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
-                <Card.Content className="p-8">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
-                      <Info className="w-5 h-5" strokeWidth={2.5} />
+              <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[1.5rem] sm:rounded-[2rem]">
+                <Card.Content className="p-5 sm:p-6 md:p-8">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-[#ed2547] rounded-full shrink-0">
+                      <Info className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-[1.35rem] font-black text-white">Requester Info</h2>
+                    <h2 className="text-lg sm:text-xl md:text-[1.35rem] font-black text-white">Requester Info</h2>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="flex flex-col">
                       <Label className={labelStyles}>Your Name</Label>
                       <div className="relative">
@@ -115,7 +121,7 @@ const NewDonationRequest = () => {
                           readOnly
                           type="text"
                           name="requesterName"
-                          defaultValue={session?.user?.name}
+                          defaultValue={session?.user?.name || ''}
                           className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
                         />
                       </div>
@@ -132,7 +138,7 @@ const NewDonationRequest = () => {
                           readOnly
                           type="email"
                           name="requesterEmail"
-                          defaultValue={session?.user?.email}
+                          defaultValue={session?.user?.email || ''}
                           className="pl-11 rounded-xl bg-[#f8f9fa]/20 border-none shadow-none text-slate-400 font-bold"
                         />
                       </div>
@@ -142,16 +148,16 @@ const NewDonationRequest = () => {
               </Card>
 
               {/* Section 2: Patient Details */}
-              <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] bg-black rounded-[2rem]">
-                <Card.Content className="p-8">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
-                      <Droplet className="w-5 h-5" strokeWidth={2.5} />
+              <Card className="border-none shadow-[0_2px_15px_rgb(0,0,0,0.02)] bg-black rounded-[1.5rem] sm:rounded-[2rem]">
+                <Card.Content className="p-5 sm:p-6 md:p-8">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-[#ed2547] rounded-full shrink-0">
+                      <Droplet className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-[1.35rem] font-black text-white">Patient Details</h2>
+                    <h2 className="text-lg sm:text-xl md:text-[1.35rem] font-black text-white">Patient Details</h2>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                     <div className="flex flex-col">
                       <Label className={labelStyles}>Recipient Name</Label>
                       <Input
@@ -159,14 +165,14 @@ const NewDonationRequest = () => {
                         type="text"
                         name="recipientName"
                         placeholder="Enter full name"
-                        className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 text-white shadow-none focus-visible:outline-none"
+                        className="rounded-xl border border-gray-800 bg-[#f8f9fa]/20 text-white shadow-none focus-visible:outline-none"
                       />
                     </div>
 
                     <div className="flex flex-col">
                       <Label className={labelStyles}>Blood Group Needed</Label>
                       <Select name="bloodGroup" required>
-                        <Select.Trigger className="rounded-xl border border-gray-200 bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                        <Select.Trigger className="rounded-xl border border-gray-800 bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
                           <Select.Value placeholder="Select Group" className="text-[#ed2547] font-bold" />
                           <Select.Indicator>
                             <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
@@ -185,12 +191,15 @@ const NewDonationRequest = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                     <div className="flex flex-col">
                       <Label className={labelStyles}>District</Label>
-                      <Select onChange={(value) => { setDistrict(value) }}
-                        name="recipientDistrict" required>
-                        <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
+                      <Select 
+                        onChange={(value) => { setDistrict(value) }}
+                        name="recipientDistrict" 
+                        required
+                      >
+                        <Select.Trigger className="rounded-xl border border-gray-800 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
                           <Select.Value placeholder="Select District" />
                           <Select.Indicator>
                             <ChevronDown className="w-4 h-4" strokeWidth={2} />
@@ -198,9 +207,9 @@ const NewDonationRequest = () => {
                         </Select.Trigger>
                         <Select.Popover>
                           <ListBox>
-                            {districts.map((district) => (
-                              <ListBox.Item key={district.id} id={district.name} textValue={district.name}>
-                                {district.name}
+                            {districts.map((d) => (
+                              <ListBox.Item key={d.id} id={d.name} textValue={d.name}>
+                                {d.name}
                               </ListBox.Item>
                             ))}
                           </ListBox>
@@ -211,7 +220,7 @@ const NewDonationRequest = () => {
                     <div className="flex flex-col">
                       <Label className={labelStyles}>Upazila</Label>
                       <Select name="recipientUpazila" required>
-                        <Select.Trigger className="rounded-xl border border-gray-200 text-white bg-[#f8f9fa]/20 h-[44px] px-4 shadow-none focus-visible:border-red-300">
+                        <Select.Trigger className="rounded-xl border border-gray-800 text-white bg-[#f8f9fa]/20 h-11 px-4 shadow-none focus-visible:border-red-300">
                           <Select.Value placeholder="Select Upazila" />
                           <Select.Indicator>
                             <ChevronDown className="w-4 h-4 text-slate-400" strokeWidth={2} />
@@ -219,9 +228,9 @@ const NewDonationRequest = () => {
                         </Select.Trigger>
                         <Select.Popover>
                           <ListBox>
-                            {upazilas.map((upazila) => (
-                              <ListBox.Item key={upazila.id} id={upazila.id} textValue={upazila.name}>
-                                {upazila.name}
+                            {upazilas.map((u) => (
+                              <ListBox.Item key={u.id} id={u.name} textValue={u.name}>
+                                {u.name}
                               </ListBox.Item>
                             ))}
                           </ListBox>
@@ -233,16 +242,16 @@ const NewDonationRequest = () => {
               </Card>
 
               {/* Section 3: Hospital & Timing */}
-              <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[2rem]">
-                <Card.Content className="p-8">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="flex items-center justify-center w-10 h-10 text-[#ed2547] rounded-full">
-                      <CalendarDays className="w-5 h-5" strokeWidth={2.5} />
+              <Card className="border-none bg-black shadow-[0_2px_15px_rgb(0,0,0,0.02)] rounded-[1.5rem] sm:rounded-[2rem]">
+                <Card.Content className="p-5 sm:p-6 md:p-8">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                    <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 text-[#ed2547] rounded-full shrink-0">
+                      <CalendarDays className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.5} />
                     </div>
-                    <h2 className="text-[1.35rem] font-black text-white">Hospital & Timing</h2>
+                    <h2 className="text-lg sm:text-xl md:text-[1.35rem] font-black text-white">Hospital & Timing</h2>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                     <div className="flex flex-col">
                       <Label className={labelStyles}>Hospital Name</Label>
                       <div className="relative">
@@ -254,7 +263,7 @@ const NewDonationRequest = () => {
                           type="text"
                           name="hospitalName"
                           placeholder="Enter hospital name"
-                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                          className="pl-11 rounded-xl border border-gray-800 shadow-none text-white bg-[#f8f9fa]/20"
                         />
                       </div>
                     </div>
@@ -270,13 +279,13 @@ const NewDonationRequest = () => {
                           type="text"
                           name="fullAddress"
                           placeholder="Street / Ward / Area"
-                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                          className="pl-11 rounded-xl border border-gray-800 shadow-none text-white bg-[#f8f9fa]/20"
                         />
                       </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
                     <div className="flex flex-col">
                       <Label className={labelStyles}>Required Date</Label>
                       <div className="relative">
@@ -287,7 +296,7 @@ const NewDonationRequest = () => {
                           required
                           type="date"
                           name="donationDate"
-                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                          className="pl-11 rounded-xl border border-gray-800 shadow-none text-white bg-[#f8f9fa]/20 min-h-[44px]"
                         />
                       </div>
                     </div>
@@ -302,7 +311,7 @@ const NewDonationRequest = () => {
                           required
                           type="time"
                           name="donationTime"
-                          className="pl-11 rounded-xl border border-gray-200 shadow-none text-white bg-[#f8f9fa]/20"
+                          className="pl-11 rounded-xl border border-gray-800 shadow-none text-white bg-[#f8f9fa]/20 min-h-[44px]"
                         />
                       </div>
                     </div>
@@ -318,7 +327,7 @@ const NewDonationRequest = () => {
                         required
                         name="requestMessage"
                         placeholder="Explain why the blood is needed..."
-                        className="pl-11 min-h-25 w-full rounded-xl border border-gray-200 shadow-none py-3 text-white bg-[#f8f9fa]/20 resize-y"
+                        className="pl-11 min-h-[120px] w-full rounded-xl border border-gray-800 shadow-none py-3 text-white bg-[#f8f9fa]/20 resize-y"
                       />
                     </div>
                   </div>
@@ -326,24 +335,27 @@ const NewDonationRequest = () => {
               </Card>
 
               {/* Submit Button Section */}
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-end pt-2 sm:pt-4">
+                {/* w-full on mobile, auto width on larger screens */}
                 <Button
                   type="submit"
-                  className="bg-[#ed2547] text-white font-bold text-[1.05rem] px-8 py-6 rounded-xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:scale-[0.98] transition-transform"
+                  className="w-full sm:w-auto bg-[#ed2547] text-white font-bold text-base sm:text-[1.05rem] px-6 sm:px-8 py-5 sm:py-6 rounded-xl shadow-[0_8px_20px_rgb(237,37,71,0.25)] hover:scale-[0.98] transition-transform"
                 >
                   Create Donation Request
                 </Button>
               </div>
 
             </form>
-          </div >
-
+          </div>
         ) : (
-          <div className='flex h-[80vh] text-center flex-col gap-2 justify-center items-center'>
-            <h1 className='text-4xl font-black text-red-500'>You are not allowed to create request!</h1>
-            <p className='text-green-500 text-2xl'>Please contact with admin</p>
-
-          </div >
+          <div className='flex h-[80vh] text-center flex-col gap-3 justify-center items-center px-4'>
+            <h1 className='text-2xl sm:text-3xl md:text-4xl font-black text-red-500'>
+              You are not allowed to create a request!
+            </h1>
+            <p className='text-green-500 text-lg sm:text-xl md:text-2xl'>
+              Please contact an admin.
+            </p>
+          </div>
         )
       }
     </div>

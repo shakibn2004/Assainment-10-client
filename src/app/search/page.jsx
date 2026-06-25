@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Search, Droplet, ChevronDown, ArrowRight, Calendar, MapPin } from 'lucide-react';
 import Link from 'next/link';
+import { authClient } from '@/lib/auth-client';
 
 const FindDonor = () => {
   const [bloodGroup, setBloodGroup] = useState('');
@@ -10,6 +11,12 @@ const FindDonor = () => {
   const [districts, setDistricts] = useState([]);
   const [upazilas, setUpazilas] = useState([]);
   const [requests, setRequests] = useState([])
+
+  const {
+    data: session,
+    isPending,
+    error
+  } = authClient.useSession();
 
   // Sample data for the dropdowns
   useEffect(() => {
@@ -42,6 +49,7 @@ const FindDonor = () => {
 
     setRequests(data)
   };
+
 
   return (
     <section className="py-20 bg-[#fafafa]/30 min-h-screen px-4 sm:px-6 lg:px-8">
@@ -163,7 +171,7 @@ const FindDonor = () => {
 
           ) : (
             // {/* Card container */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
               {requests.map((request) => (
                 <div
                   key={request._id}
@@ -171,9 +179,9 @@ const FindDonor = () => {
                 >
                   {/* Card Top Banner */}
                   <div className="bg-white/20 h-25 rounded-t-[2rem] p-6">
-                    <div className={`${request.donationStatus === 'done' ? 'text-green-500' : 'text-[#ff5722]'} flex items-center gap-2 text-[10px] font-black tracking-widest uppercase`}>
-                      <div className={`${request.donationStatus === 'done' ? 'bg-green-500' : 'bg-[#ff5722]'} w-2 h-2 rounded-full`}></div>
-                      {request.donationStatus}
+                    <div className={`${request.status === 'done' ? 'text-green-500' : 'text-[#ff5722]'} flex items-center gap-2 text-[10px] font-black tracking-widest uppercase`}>
+                      <div className={`${request.status === 'done' ? 'bg-green-500' : 'bg-[#ff5722]'} w-2 h-2 rounded-full`}></div>
+                      {request.status}
                     </div>
                   </div>
 
@@ -187,7 +195,7 @@ const FindDonor = () => {
 
                     {/* Patient Name Box (Aligned to right of badge) */}
                     <div className="flex flex-col items-center ml-14 mb-8">
-                      <h3 className="text-lg font-bold text-white text-center">{request.requesterName}</h3>
+                      <h3 className="text-lg font-bold text-white text-center">{request.name}</h3>
                       <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Recipient</p>
                     </div>
 
@@ -201,7 +209,7 @@ const FindDonor = () => {
                         </div>
                         <div>
                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Location</p>
-                          <p className="text-[13px] font-bold text-slate-700">{request.fullAddress}</p>
+                          <p className="text-[13px] font-bold text-slate-700">{request.district}</p>
                         </div>
                       </div>
 
@@ -213,7 +221,7 @@ const FindDonor = () => {
                         <div>
                           <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Date & Time</p>
                           <p className="text-[13px] font-bold text-slate-700">
-                            {request.donationDate} <span className="text-slate-300 mx-1">|</span> {request.donationTime}
+                            {'00-00-00'} <span className="text-slate-300 mx-1">|</span> {'00:00'}
                           </p>
                         </div>
                       </div>
@@ -221,7 +229,7 @@ const FindDonor = () => {
                     </div>
 
                     {/* Action Button */}
-                    <Link href={`/dashboard/donation-request-details/${request._id}`} className="w-full bg-red-500/30 hover:bg-[#e64a19] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
+                    <Link href={`${session?`/dashboard/donation-request-details/${request._id}`:'/login'}`} className="w-full bg-red-500/30 hover:bg-[#e64a19] text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors text-sm">
                       View Details
                       <ArrowRight className="w-4 h-4" />
                     </Link>
