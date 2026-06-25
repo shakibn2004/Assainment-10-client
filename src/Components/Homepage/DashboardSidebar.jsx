@@ -11,7 +11,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 const notify = () => toast.success('Sign Out!');
 
-const DashboardSidebar = () => {
+const DashboardSidebar = ({ openSidebar, setOpenSidebar }) => {
     const [userData, setUserData] = useState([])
     const pathName = usePathname();
 
@@ -22,7 +22,7 @@ const DashboardSidebar = () => {
     } = authClient.useSession();
 
     const router = useRouter()
-    
+
     // user signout
     const handleSingOut = async () => {
         await authClient.signOut({
@@ -48,11 +48,11 @@ const DashboardSidebar = () => {
 
     return (
         // Hide completely on mobile (handled by MobileMenu), show on tablet and up
-        <div className="hidden md:block shrink-0">
+        <div onClick={() => setOpenSidebar(prev => !prev)} className={`${openSidebar ? 'block' : 'hidden'} md:block shrink-0`}>
             {/* Added responsive widths, padding, sticky positioning, and overflow */}
             <aside className="md:w-64 lg:w-75 h-screen sticky top-0 flex flex-col bg-black md:px-4 lg:px-6 py-8 font-sans border-r border-gray-900 overflow-y-auto overflow-x-hidden custom-scrollbar">
                 <Toaster />
-                
+
                 {/* MAIN MENU SECTION */}
                 <div className="mb-6 lg:mb-8">
                     <h3 className="text-[0.65rem] lg:text-[0.7rem] font-extrabold text-slate-400 tracking-[0.15em] uppercase mb-3 lg:mb-4 px-2">
